@@ -1,0 +1,73 @@
+nombre_de_actividad,nombre_de_cosecha,predio,empleado,tiempo_de_actividad,notas,fecha_planificada,fecha_completada,planned,numero_de_injertos,cantidad_agua_galones,cantidad_agua_tiempo,producto_semilla,cantidad_siembra,unidades_siembra,cantidad_cosecha_unidades,cantidad_cosecha_lbs,producto_utilizado,cantidad_utilizada,unidades_fertilizacion,id_agroptima
+Injertar,Pana,Predio 10,,1,Brenda y Yolanda hicieron 13 injertos de Pana.,,12/13/22,FALSE,13,,,,,,,,,,,2776680
+Injertar,Pana,Predio 10,,1,"Brenda y Yolanda hicieron 6 injertos de pana y 8 injertos de mango. De los injertos de mango puso 4 dentro del viverito y dejo 4 fuera del vivero.
+Norma estuvo evaluando los injertos de pana ya existentes.",,12/6/22,FALSE,6,,,,,,,,,,,2771679
+Injertar,Mango,Vivero,,1,"Brenda y Yolanda hicieron 6 injertos de pana y 8 injertos de mango. De los injertos de mango puso 4 dentro del viverito y dejo 4 fuera del vivero.
+Norma estuvo evaluando los injertos de pana ya existentes.",12/29/23,12/6/22,FALSE,8,,,,,,,,,,,2771679
+Injertar,Pana,,,1,"Brenda busco esquejes e hizo con Yolanda 13 injertos de pana.
+Brenda saco los injertos del 11 de octubre para la mesa al lado del viverito y les prendió el mist.",,11/29/22,,13,,,,,,,,,,,2759899
+Injertar,Pana,,,1,Brenda busco esquejes y luego hizo con Yolanda 20 injertos de pana.,,11/22/22,,20,,,,,,,,,,,2756363
+Injertar,Aguacate,,,1,Brenda y Yolanda hicieron 11 injertos de aguacate (árbol frente al rancho las placas). Pusieron 3 en el viverito sin taparlos con bolsa de papel y 8 fuera del viverito tapados con bolsa de papel.,,11/17/22,,11,,,,,,,,,,,2748878
+Injertar,Pana,,,1,Brenda y Yolanda hicieron 15 injertos de pana.,,11/15/22,,15,,,,,,,,,,,2739627
+Injertar,Pana,,,1,"Yolanda, Brenda y Norma hicieron 21 injertos de pana.",,11/21/23,,21,,,,,,,,,,,3254501
+Injertar,Pana,,,1,"Brenda, Yolanda y Norma hicieron 22 injertos de los cuales 2 fueron encorte 45 grados.",,11/16/23,,22,,,,,,,,,,,3249530
+Injertar,Pana,,,1,Brenda y Norma hicieron 9 injertos de pana.,,11/15/23,,9,,,,,,,,,,,3249513
+Injertar,Pana,,,1,"Brenda, Yolanda y Norma hicieron 11 injertos de pana.",,11/14/23,,11,,,,,,,,,,,3248308
+Injertar,Pana,,,1,"Brenda, Yolanda y Norma hicieron 20 injertos de pana.",,11/9/23,,20,,,,,,,,,,,3248283
+Injertar,Pana,,,1,"Brenda, Yolanda y Norma hicieron 19 injertos de pana (primeros injertos realizados luego del viverito nuevo (área nueva con techito paneles plásticos).",,11/7/23,,19,,,,,,,,,,,3248151
+Injertar,Pana,,,1,"Yolanda, Brenda y Norma hicieron 19 injertos (patrones están bastantes alargados).",,10/17/23,,19,,,,,,,,,,,3202433
+Injertar,Pana,,,1,"Brenda, Yolanda y Norma hicieron 21 injertos de pana.",,10/12/23,,21,,,,,,,,,,,3201511
+Injertar,Pana,,,1,"Brenda, Norma y Yolanda hicieron 22 injertos.",,10/10/23,,22,,,,,,,,,,,3202662
+Injertar,Pana,,,1,"Norma, Brenda y Yolanda hicieron 21 injertos de pana.",,10/3/23,,21,,,,,,,,,,,3172395
+Injertar,Pana,,,1,"Hoy reiniciaron las operaciones en el viverito; se hicieron 22 injertos. Brenda ayer le echó al tanque de 300 galones 1/4 de pastilla de Clorox y hoy Tito le reemplazo los pisteritos por los difusores que crean la ""llovizna"".",,9/28/23,,22,,,,,,,,,,,3172355
+Injertar,Aguacate,,,1,Norma y Yolanda hicieron 4 injertos de aguacate (Guiro 1); retomando la injertación de frutales que no son panapén.,,9/14/23,,4,,,,,,,,,,,3171286
+Injertar,Pana,,,1,Brenda busco esquejes y luego hizo 21 injertos de pana con Yolanda.,,8/1/23,,21,,,,,,,,,,,3100018
+Injertar,Pana,,,1,Brenda busco esquejes y luego hizo 15 injertos de pana con Yolanda.,,7/4/23,,15,,,,,,,,,,,3058128
+Injertar,Pana,,,1,Brenda busco esquejes y luego hizo 15 injertos de pana.,,6/16/23,,15,,,,,,,,,,,3032016
+Injertar,Pana,,,1,"Brenda busco esquejes y luego, hizo 21 injertos de pana con Yolanda.",,6/8/23,,21,,,,,,,,,,,3011214
+Injertar,Pana,,,1,Brenda busco esquejes y luego hizo 17 injertos de pana con Yolanda.,,5/18/23,,17,,,,,,,,,,,3010882
+Injertar,Pana,,,1,Brenda estuvo buscando esquejes y luego hizo 16 injertos de pana con Yolanda.,,5/16/23,,16,,,,,,,,,,,3010823
+Injertar,Pana,,,1,Brenda estuvo buscando esquejes y luego hizo 17 injertos de pana con Yolanda (4 con parafina).,,5/11/23,,17,,,,,,,,,,,3010806
+Injertar,Pana,,,1,Brenda estuvo buscando esquejes de pana y luego hizo 14 injertos con Yolanda (2 con parafina).,,5/9/23,,14,,,,,,,,,,,3010770
+Injertar,Pana,,,1,Norma y Yolanda hicieron 8 injertos de pana.,,3/22/23,,8,,,,,,,,,,,2937120
+Injertar,Pana,,,1,Brenda y Yolanda hicieron 10 injertos de pana.,,3/16/23,,10,,,,,,,,,,,2918820
+Injertar,Pana,,,1,Brenda y Yolanda hicieron 9 injertos de pana.,,3/14/23,,9,,,,,,,,,,,2918787
+Injertar,Pana,,,1,Brenda busco esqueje y con Yolanda prepararon 5 injertos.,,3/2/23,,5,,,,,,,,,,,2897186
+Injertar,Pana,,,1,"Benda, Norma y Yolanda hicieron 20 injertos de pana (los 4 injertos que se hicieron hacen 2 semanas; antes de comprar las cuchillas se murieron, y 2 injertos de la semana pasada están arrugados.",,2/28/23,,20,,,,,,,,,,,2897080
+Injertar,Pana,,,1,"Norma hizo un pequeño retraining entre Yolanda, Brenda y Daniel. Hicieron 14 injertos.",,2/23/23,,14,,,,,,,,,,,2879430
+Injertar,Pana,,,1,"Norma, Yolanda y Brenda iniciaron injertación de 2 árboles de pana pero se abortó el proceso, a pesar de tener cerca de 12 esquejes porque las cuchillas no amolaban.
+Se ordenaron 3 cuchillas nuevas, deben de llegar para la proxima semana.",,2/15/23,,2,,,,,,,,,,,2854463
+Injertar,Pana,,,1,Brenda busco esquejes y luego hizo 17 injertos de pana con Yolanda.,,1/12/23,,17,,,,,,,,,,,2815302
+Injertar,Aguacate,,,1,Brenda y Yolanda hicieron 11 injertos de aguacate (se cubrieron con bolsas de plástico y bolsa de papel).,,1/10/23,,11,,,,,,,,,,,2815102
+Injertar,Pana,,,1,Brenda y Yolanda hicieron 15 injerertos de pana.,,11/10/22,,15,,,,,,,,,,,2738079
+Injertar,Pana,,,1,Brenda y Yolanda hicieron 19 injertos de panas.,,11/8/22,,19,,,,,,,,,,,2738054
+Injertar,Pana,,,1,Brenda y Yolanda hicieron 14 injertos de pana.,,11/3/22,,14,,,,,,,,,,,2724764
+Injertar,Pana,,,1,Brenda y Yolanda hicieron 19 injerto de pana.,,11/1/22,,19,,,,,,,,,,,2728455
+Injertar,Pana,,,1,"Brenda y Yolanda hicieron 19 injertos de pana y se comenzó a usar el nuevo viverito (se repaso el asunto del amolado de las tijeras, forma de la cuña y el uso de alcohol).
+Se hizo un injerto de un árbol que produce panas redondas (esta cercano al manatial- se rotularon con un 0).",,10/11/22,,19,,,,,,,,,,,2696420
+Injertar,Pana,,,1,"Brenda y Yolanda hicieron 15 injertos de pana; aunque jean amoló las cuchillas temprano, encotraron que es necesario amolarlas constantemente. (despues de cada injerto).",,9/8/22,,15,,,,,,,,,,,2646286
+Injertar,Pana,,,1,Brenda y Yolanda hicieron 17 injertos de pana utilizando solamente liguilla (no parafina).,,8/30/22,,17,,,,,,,,,,,2636699
+Injertar,Mango,,,1,Brenda y Yolanda hicieron injertos de mango y aguacate.,,8/25/22,,,,,,,,,,,,,2630153
+Injertar,Pana,,,1,Brenda y Yolanda hicieron 26 injertos de panas.,,8/23/22,,26,,,,,,,,,,,2630117
+Injertar,Pana,,,1,Brenda y Yolanda hicieron cerca de 18 injertos.,,8/11/22,,18,,,,,,,,,,,2616211
+Injertar,Pana,,,1,Brenda y Yolanda hicieron 36 injertos + 1 reinjerto de pana.,,8/4/22,,37,,,,,,,,,,,2606801
+Injertar,Pana,,,1,Brenda y Yolanda hicieron 36 injertos de pana.,,8/2/22,,36,,,,,,,,,,,2606739
+Injertar,Pana,,,1,"Norma y Yolanda hicieron 30 injertos de pana ( uno de los injertos que no se dio de la semana pasada, hoy se reinjerto). A otro injerto de la semana pasada se le cortó la punta sin querer este se cubrió totalmente con parafina. Hay muchos esquejes en el Predio C.",,7/28/22,,30,,,,,,,,,,,2602121
+Injertar,Pana,,,1,Brenda y Norma buscaron esquejes en los predios C y la Yuca (hay muchos esquejes buenos). Luego Brenda y Yolanda hicieron 34 injertos de pana.,,7/21/22,,34,,,,,,,,,,,2585524
+Injertar,Pana,,,1,Brenda busco esquejes de pana y junto a Yolanda hicieron 4 injertos.,,7/12/22,,4,,,,,,,,,,,2563981
+Injertar,Pana,,,1,Brenda y Yolanda hicieron 6 injertos de pana y 5 injertos de aguacate.,,7/7/22,,6,,,,,,,,,,,2556574
+Injertar,Aguacate,,,1,Brenda y Yolanda hicieron 6 injertos de pana y 5 injertos de aguacate.,,7/7/22,,5,,,,,,,,,,,2556574
+Injertar,Aguacate,,,1,Brenda y Yolanda hicieron 7 injertos de aguacate y 4 injertos de mango. Luego Brenda subio a ayudar a lavar y empacar panas.,,7/5/22,,7,,,,,,,,,,,2556191
+Injertar,Mango,,,1,Brenda y Yolanda hicieron 7 injertos de aguacate y 4 injertos de mango. Luego Brenda subio a ayudar a lavar y empacar panas.,,7/5/22,,4,,,,,,,,,,,2556191
+Injertar,Pana,,,1,Brenda buscó esquejes de pana y de aguacate. De pana solo encontró 5 por los predios cerca de la fábrica y de aguacate 9. Yolanda la ayudó con los injertos.,,6/30/22,,14,,,,,,,,,,,2545435
+Injertar,Pana,,,1,Brenda y Yolanda hicieron 17 injertos de pana . Luego comenzo a limpiar las parchas.,,6/28/22,,17,,,,,,,,,,,2556150
+Injertar,Pana,,,1,Brenda busco esquejes y luego hizo 23 injertos de pana con Yolanda. Luego subió a lavar y empacar panas con Natasha.,,6/21/22,,23,,,,,,,,,,,2533039
+Injertar,Pana,,,1,"Brenda buscó esquejes en el predio Pana y Cacao, luego ella y Yolanda hicieron 16 injertos de pana.",,6/16/22,,16,,,,,,,,,,,2525292
+Injertar,Pana,,,1,"Brenda busco injertos en el predio C, luego hizo 29 injertos con Yolanda.",,6/14/22,,29,,,,,,,,,,,2521539
+Injertar,Pana,,,1,Brenda buscó esquejes de pana. Luego Brenda y Yolanda hicieron 11 injertos de pana.,,6/7/22,,11,,,,,,,,,,,2508403
+Injertar,Pana,,,1,Brenda busco esquejes y luego ella y Yolanda injertarón 24 árboles de pana.,,6/2/22,,24,,,,,,,,,,,2506287
+Injertar,Pana,,,1,"Yolanda re-inició los injertos de pana con la nueva bomba (hizo 16, Norma hizo algunos).",,5/31/22,,16,,,,,,,,,,,2545125
+Injertar,Pana,,,1,Se buscarón esquejes de aguacate para injerto. Se injertarón 8 árboles de aguacate.,,4/21/22,,8,,,,,,,,,,,2479915
+Injertar,Pana,,,1,Buscó esquejes de pana y injertó cerca de 15 árboles.,,4/7/22,,15,,,,,,,,,,,2479703
+Injertar,Pana,,,1,Brenda busco esquejes y injerto cerca de 15 árboles de pana.,,4/5/22,,15,,,,,,,,,,,2479685
+Injertar,Pana,,,1,Brenda busco esquejes para poder hacer injertos de pana. Hizo 15 injertos.,,3/30/22,,15,,,,,,,,,,,2479585
