@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-f(a)4o8n)po2l37i@q)5&&7sk6i7#&7&_4pz+vi=8#ginoi!)c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['10.0.0.19']
 
 
 # Application definition
@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'tareas',
     "crispy_bootstrap4",
-    'crispy_forms'
+    'crispy_forms',
+    'django_dbml',
+    "slick_reporting",
 ]
 
 MIDDLEWARE = [

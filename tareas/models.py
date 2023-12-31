@@ -65,7 +65,6 @@ class Tareas(models.Model):
     numero_de_injertos = models.IntegerField(null=True)
     cantidad_agua_galones = models.IntegerField(null=True)
     cantidad_agua_tiempo = models.IntegerField(null=True)
-    producto_semilla = models.ForeignKey('Productos', on_delete=models.CASCADE, related_name='producto_semilla', null=True)
     cantidad_siembra = models.IntegerField(null=True)
     unidades_siembra = models.CharField(max_length=50, null=True)  # Assuming a predefined set of units
     cantidad_cosecha_unidades = models.IntegerField(null=True)
@@ -76,8 +75,7 @@ class Tareas(models.Model):
     id_agroptima=models.IntegerField(null=True)
 
     def __str__(self):
-        return f"{self.nombre_de_actividad} en {self.predio}"
-    
+        return self.nombre_de_actividad
 
 class Lluvias(models.Model):
     lluvias_id = models.AutoField('Lluvias', primary_key=True)

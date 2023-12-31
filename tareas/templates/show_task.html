@@ -1,0 +1,217 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+  <head><script src="../assets/js/color-modes.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sidebars/">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/features/">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    <link href="../static/css/styles.css" rel="stylesheet">
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/css/bootstrap.min.css">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- CSS -->
+  
+    <link rel="stylesheet" href="../static/css/style.css" />
+
+    <!-- Fontawesome CDN Link -->
+    <link
+      rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"/>
+
+
+    <script src="../assets/js/color-modes.js"></script>
+  </head>
+  <title>Ver Tareas</title>
+  
+ <!-- Header/Navbar -->
+
+
+ {% include 'navbar.html' %}
+
+
+
+ <div class="header text-center">
+  <h1 class="display-3">Detalle de Tarea</h1>
+</div>
+
+
+<!-- Message from backend Sale-->
+  {% for message in messages %}
+  {% if message.tags == 'success' %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+      <script>
+      $(document).ready(function(){
+      $("#saleModal").modal('show');
+      });
+      </script>
+    {% endif %}
+{% endfor %}
+
+
+<!-- Message from backend Email -->
+{% for message in messages %}
+{% if message.tags == 'info' %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script>
+  $(document).ready(function(){
+  $("#informativeModal").modal('show');
+  });
+  </script>
+{% endif %}
+{% endfor %}
+
+
+<body>
+
+
+  <div class="row">
+    <div class="col-12 col-md-4">
+      <div class="card">
+        <div class="card-header bg-success">
+          <h5 class="card-title" style="color: white;">Tarea</h5>
+        </div>
+        <div class="card-body">
+          <h1 class="display-5">{{ tarea.nombre_de_actividad }}</h1>
+        </div>
+      </div>
+    </div>
+  
+    <div class="col-12 col-md-4">
+      <div class="card">
+        <div class="card-header bg-success">
+          <h5 class="card-title" style="color: white;">Cosecha</h5>
+        </div>
+        <div class="card-body">
+          <h1 class="display-5">{{ tarea.nombre_de_cosecha }} </h1>
+        </div>
+      </div>
+    </div>
+  
+
+    <div class="col-12 col-md-4">
+      <div class="card">
+        <div class="card-header bg-success">
+          <h5 class="card-title" style="color: white;">Predio</h5>
+        </div>
+        <div class="card-body">
+          <h1 class="display-5">{{ tarea.predio }} </h1>
+        </div>
+      </div>
+  </div>
+
+<div class="row mt-4">
+    <div class="col-12 col-md-4">
+      <div class="card">
+        <div class="card-header bg-success">
+          {% if tarea.planned %}
+            <h5 class="card-title" style="color: white;">Fecha Planificada</h5>
+          {% else %}
+            <h5 class="card-title" style="color: white;">Fecha Completada</h5>
+          {% endif %}
+        </div>
+        <div class="card-body">
+          {% if tarea.planned %}
+            <h1 class="display-5">{{ tarea.fecha_planificada }}</h1>
+          {% else %}
+            <h1 class="display-5">{{ tarea.fecha_completada }}</h1>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  
+
+    <div class="col-12 col-md-4">
+      <div class="card">
+        <div class="card-header bg-success">
+          <h5 class="card-title" style="color: white;">Cantidad</h5>
+        </div>
+        <div class="card-body">
+          {% if tarea.nombre_de_actividad.tipo_de_actividad.tipo_act_id == 2 %}
+            <h1 class="display-5">{{ tarea.cantidad_siembra }} {{ tarea.unidades_siembra }}</h1>
+          {% elif tarea.nombre_de_actividad.tipo_de_actividad.tipo_act_id == 6 %}
+            <h1 class="display-5">{{ tarea.cantidad_cosecha_unidades }}</h1>
+          {% elif tarea.nombre_de_actividad.tipo_de_actividad.tipo_act_id == 5 %}
+            <h1 class="display-5">{{ tarea.cantidad_agua_galones }} galones</h1>
+          {% elif tarea.nombre_de_actividad.tipo_de_actividad.tipo_act_id == 8 %}
+            <h1 class="display-5">{{ tarea.numero_de_injertos }} Injertos</h1>
+            {% else  %}
+            <h1 class="display-5">N/A</h1>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    
+    
+    <div class="col-12 col-md-4">
+      <div class="card">
+        <div class="card-header bg-success">
+          <h5 class="card-title">Batería Escogido</h5>
+        </div>
+        <div class="card-body">
+          <h1 class="display-5">{{ queryset.battery_storage_option_id }}</h1>
+        </div>
+      </div>
+    </div>
+
+    
+  </div>
+ 
+  <a href="/update_tarea" class="btn btn-success text-white mb-3">Admin</a>
+
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button class="btn btn-primary" type="submit" name="submit_action" value="update_task">Actualizar Tarea</button>
+</form>
+<br/>
+
+<!-- Modal Estado de Venta -->
+<div class="modal fade" id="saleModal" tabindex="-1" aria-labelledby="saleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+          <div class="modal-header">
+              <div class="justify-content-center">
+                  <h6 class="modal-title" id="saleModalLabel"></i>&nbsp;&nbsp; ¡Felicidades!</h6>
+              </div>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+              <div class="text-center text-primary mt-3">
+                  <i class="far fa-check-circle fa-6x" style="color: green;"></i>
+              </div>
+              <br>
+              <div class="mb-3">El estado de venta fue actualizado en {{queryset.converted_sale_date}}</div> 
+          </div>
+          <div class="modal-footer">
+              <button id="btn-cancel" type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" style="width: 65px;">Close</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+
+
+<script src="../static/js/script.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+</html>
+ 
+
+
+
+
+
+
+
+
+

@@ -19,6 +19,8 @@ from django.urls import path, include
 from tareas import views
 from django.urls import path
 from django.contrib.auth import views as auth_view
+from django.urls import path, include
+import django_sql_dashboard
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,6 +37,15 @@ urlpatterns = [
     path('create-receta/', views.create_receta, name='create-receta'),
     path('select-theme/', views.select_theme, name='select_theme'),
     path('document_activity/', views.document_activity, name='document_activity'),
-    path('add_tarea_done/', views.done_add_tarea, name='add_tarea_done')
+    path('add_tarea_done/', views.done_add_tarea, name='add_tarea_done'),
+    # path('dashboard/', views.lluvias_chart, name='dashboard'),
+    path('dashboards/', views.tareas_dashboard, name='dashboards'),
+    # path("cosecha_dash/", views.cosecha_dash, name="cosecha-dash"),
+    path('tareas_calendar_feed/', views.tareas_calendar_feed, name='tareas_calendar_feed'),
+    path('update_tarea/<int:tarea_id>/', views.update_tarea, name='update_tarea'),
+    path('show_task/', views.show_task, name='show_task'),
+    path('tarea/<int:tarea_id>/', views.show_task, name='show_task'),
+
+
     ]
 

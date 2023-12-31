@@ -49,7 +49,7 @@ class DoneTareasForm(forms.ModelForm):
 class SiembraForm(forms.ModelForm):
     class Meta:
         model = Tareas
-        fields = ['nombre_de_actividad','nombre_de_cosecha', 'predio', 'empleado', 'fecha_completada', 'producto_semilla', 'cantidad_siembra', 'unidades_siembra', 'tiempo_de_actividad', 'notas']  # Fields relevant to planting
+        fields = ['nombre_de_actividad','nombre_de_cosecha', 'predio', 'empleado', 'fecha_completada', 'cantidad_siembra', 'unidades_siembra', 'tiempo_de_actividad', 'notas']  # Fields relevant to planting
         widgets = {
             'fecha_completada': forms.DateInput(attrs={'type': 'date'}),
         }
@@ -100,3 +100,11 @@ class TareasForm(forms.ModelForm):
             'fecha_completada': forms.DateInput(attrs={'type': 'date'}),
         }
 
+
+class UpdateTaskForm(forms.ModelForm):
+    class Meta:
+        model = Tareas
+        fields = ['fecha_completada']
+        widgets = {
+            'fecha_completada': forms.DateInput(attrs={'type': 'date'}),
+        }

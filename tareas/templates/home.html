@@ -50,6 +50,25 @@
       }
 
 
+    /* Default style for larger screens */
+    .card h3 {
+        font-size: 1.5rem; /* Adjust this value as needed */
+    }
+
+    /* For medium screens (e.g., tablets in portrait mode) */
+    @media (max-width: 768px) {
+        .card h3 {
+            font-size: 1.25rem; /* Smaller font size for medium screens */
+        }
+    }
+
+    /* For smaller screens (e.g., mobile devices) */
+    @media (max-width: 576px) {
+        .card h3 {
+            font-size: 1rem; /* Even smaller font size for small screens */
+        }
+    }
+
     </style>
 
     <!-- Header/Navbar -->
@@ -89,6 +108,34 @@
       <path d="M6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 1a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm.535-10a3.975 3.975 0 0 1-.409-1H4a1 1 0 0 1 0-2h2.126c.091-.355.23-.69.41-1H4a2 2 0 1 0 0 4h2.535z"/>
       <path d="M14 4a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/>
     </symbol>
+    <symbol xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-droplet-fill" viewBox="0 0 16 16" id="rain">
+      <path d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6M6.646 4.646l.708.708c-.29.29-1.128 1.311-1.907 2.87l-.894-.448c.82-1.641 1.717-2.753 2.093-3.13Z"/>
+    </symbol> 
+
+    <symbol xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16" id="eye">
+        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+        <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+    </symbol>
+
+    <symbol xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16" id="plan">
+      <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"/>
+    </symbol>
+
+    <symbol id="chart" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-clipboard2-data-fill" viewBox="0 0 16 16">
+      <path d="M10 .5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5.5.5 0 0 1-.5.5.5.5 0 0 0-.5.5V2a.5.5 0 0 0 .5.5h5A.5.5 0 0 0 11 2v-.5a.5.5 0 0 0-.5-.5.5.5 0 0 1-.5-.5"/>
+      <path d="M4.085 1H3.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1h-.585c.055.156.085.325.085.5V2a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 4 2v-.5c0-.175.03-.344.085-.5M10 7a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0zm-6 4a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0zm4-3a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0V9a1 1 0 0 1 1-1"/>
+    </symbol>
+
+<symbol id="admin" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-person-badge-fill" viewBox="0 0 16 16">
+  <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm4.5 0a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zM8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6m5 2.755C12.146 12.825 10.623 12 8 12s-4.146.826-5 1.755V14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1z"/>
+</symbol>
+
+
+    <symbol id="check" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+
+
+    </symbol>
   </svg>
 
   <body>
@@ -98,156 +145,218 @@
 
 
 
-  <main role="main" class="container">
-    <!-- Features Container -->
-    <div class="container mt-5">
-        <div class="row">
-            <!-- First Row with two cards -->
-            <!-- First Feature Card -->
-            <div class="col-md-4 mb-3">
-              <div class="card h-100">
-                <div class="card-body">
-                  <!-- First Row -->
-                  <div class="row mb-3">
-                    <div class="col d-flex align-items-start">
-                      <div class="icon-square text-bg-primary bg-success d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-                        <svg class="bi" width="1em" height="1em"><use xlink:href="#collection"/></svg>                
-                      </div>
-                      <div>
-                        <h3 class="fs-2 text-body-emphasis mb-3">Documentar Tarea</h3>
-                      </div>
-                    </div>
+
+
+
+
+
+<main role="main" class="container">
+  <!-- Features Container -->
+  <div class="container mt-5">
+      <!-- Row for cards -->
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            <div class="card-body">
+              <!-- First Row -->
+              <div class="row mb-3">
+                <div class="col d-flex align-items-start">
+                  <div class="icon-square text-bg-primary bg-success d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+                    <svg class="bi" width="1em" height="1em"><use xlink:href="#check"/></svg>                
                   </div>
-        
-                  <!-- Second Row -->
-                  <div class="row">
-                    <div class="col">
-                      <p>Añade tareas completadas recientemente.</p>
-                      <a href="/select-theme" class="btn btn-success text-white mb-3">Documenta</a>
-                    </div>
+                  <div>
+                    <h3 class="fs-2 text-body-emphasis mb-3">Documentar Tarea</h3>
                   </div>
                 </div>
               </div>
-            </div>
-
-            <!-- Second Feature Card -->
-            <div class="col-md-4 mb-3">
-              <div class="card h-100">
-                <div class="card-body">
-                  <!-- First Row -->
-                  <div class="row mb-3">
-                    <div class="col d-flex align-items-start">
-                      <div class="icon-square text-bg-primary bg-success d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-                        <svg class="bi" width="1em" height="1em"><use xlink:href="#people-circle"/></svg>
-                      </div>
-                      <div>
-                        <h3 class="fs-2 text-body-emphasis mb-3">Planifica Tareas</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- Second Row -->
-                  <div class="row">
-                    <div class="col">
-                      <p>Planifica tareas y siembras.</p>
-                      <a href="/add_tarea_planned" class="btn btn-success text-white mb-3">Planifica</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Third Column spanning two rows for the table -->
-            <div class="col-md-4 mb-3">
-                    <!-- Empty Card for Table -->
-
-                          <div class="card-body">
-                              <h3 class="fs-2 text-body-emphasis mb-3">Actividades ({{ start_week|date:"M d" }} - {{ end_week|date:"M d" }})</h3>
-                              
-                              <table class="table">
-                                  <thead>
-                                      <tr>
-                                          <th>Actividad</th>
-                                          <th>Predio</th>
-                                          <th>Fecha Planificada</th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                      {% for tarea in planned_activities %}
-                                          <tr>
-                                              <td>{{ tarea.nombre_de_actividad }}</td>
-                                              <td>{{ tarea.predio }}</td>
-                                              <td>{{ tarea.fecha_planificada|date:"d-m-Y" }}</td>
-                                          </tr>
-                                      {% empty %}
-                                          <tr>
-                                              <td colspan="3">No planned activities for this week.</td>
-                                          </tr>
-                                      {% endfor %}
-                                  </tbody>
-                              </table>
-                          </div>
-                      </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <!-- Second Row with two cards -->
-            <!-- Third Feature Card -->
-            <div class="col-md-4 mb-3">
-              <div class="card h-100">
-                <div class="card-body">
-                  <!-- First Row -->
-                  <div class="row mb-3">
-                    <div class="col d-flex align-items-start">
-                      <div class="icon-square text-bg-primary bg-success d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-                        <svg class="bi" width="1em" height="1em"><use xlink:href="#table"/></svg>
-                      </div>
-                      <div>
-                        <h3 class="fs-2 text-body-emphasis mb-3">Monitorea</h3>
-                      </div>
-                    </div>
-                  </div>
-      
-        
-                  <!-- Second Row -->
-                  <div class="row">
-                    <div class="col">
-                      <p>Accese a su data.</p>
-                      <a href="/tareas_list_done" class="btn btn-success text-white mb-3">Monitorea</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Fourth Feature Card (conditional) -->
-            <!-- <div class="row"> -->
-              <div class="col-md-4 mb-3">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="feature col">
-                      <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-success fs-2 mb-3">
-                        <svg class="bi" width="1em" height="1em"><use xlink:href="#toggles2"/></svg>
-                      </div>
-                      <h3 class="fs-2 text-body-emphasis">Documentar Lluvia</h3>
-                      <p>Record de lluvias</p>
-                      <a href="/add_lluvia" class="btn btn-success text-white mb-3">Lluvias</a>
-                    </div>
-                  </div>
+    
+              <!-- Second Row -->
+              <div class="row">
+                <div class="col">
+                  <p>Añade tareas completadas recientemente.</p>
+                  <a href="/select-theme" class="btn btn-success text-white mb-3">Documenta</a>
                 </div>
               </div>
             </div>
           </div>
         </div>
-    </div>
+
+          <!-- Second Feature Card -->
+          <div class="col-md-4 mb-3">
+            <div class="card h-100">
+              <div class="card-body">
+                <!-- First Row -->
+                <div class="row mb-3">
+                  <div class="col d-flex align-items-start">
+                    <div class="icon-square text-bg-primary bg-success d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+                      <svg class="bi" width="1em" height="1em"><use xlink:href="#plan"/></svg>
+                    </div>
+                    <div>
+                      <h3 class="fs-2 text-body-emphasis mb-3">Planificar Tareas a Completar</h3>
+                    </div>
+                  </div>
+                </div>
+                <!-- Second Row -->
+                <div class="row">
+                  <div class="col">
+                    <p>Planifica tareas y siembras.</p>
+                    <a href="/add_tarea_planned" class="btn btn-success text-white mb-3">Planifica</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Third Feature Card -->
+          <div class="col-md-4 mb-3">
+            <div class="card h-100">
+              <div class="card-body">
+                <!-- First Row -->
+                <div class="row mb-3">
+                  <div class="col d-flex align-items-start">
+                    <div class="icon-square text-bg-primary bg-success d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+                      <svg class="bi" width="1em" height="1em"><use xlink:href="#rain"/></svg>
+                    </div>
+                    <div>
+                      <h3 class="fs-2 text-body-emphasis mb-3">Documentar Lluvia</h3>
+                    </div>
+                  </div>
+                </div>
+    
+      
+                <!-- Second Row -->
+                <div class="row">
+                  <div class="col">
+                    <p>Documenta lluvia en la finca. </p>
+                    <a href="/add_lluvia" class="btn btn-success text-white mb-3">Lluvia</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            <div class="card-body">
+              <!-- First Row -->
+              <div class="row mb-3">
+                <div class="col d-flex align-items-start">
+                  <div class="icon-square text-bg-primary bg-success d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+                    <svg class="bi" width="1em" height="1em"><use xlink:href="#eye"/></svg>                
+                  </div>
+                  <div>
+                    <h3 class="fs-2 text-body-emphasis mb-3">Monitorea Tareas Hechas</h3>
+                  </div>
+                </div>
+              </div>
+    
+              <!-- Second Row -->
+              <div class="row">
+                <div class="col">
+                  <p>Monitorea tareas completadas.</p>
+                  <a href="/tareas_list_done" class="btn btn-success text-white mb-3">Monitorea</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+          <!-- Second Feature Card -->
+          <div class="col-md-4 mb-3">
+            <div class="card h-100">
+              <div class="card-body">
+                <!-- First Row -->
+                <div class="row mb-3">
+                  <div class="col d-flex align-items-start">
+                    <div class="icon-square text-bg-primary bg-success d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+                      <svg class="bi" width="1em" height="1em"><use xlink:href="#chart"/></svg>
+                    </div>
+                    <div>
+                      <h3 class="fs-2 text-body-emphasis mb-3">Monitorea Tareas Planificadas</h3>
+                    </div>
+                  </div>
+                </div>
+                <!-- Second Row -->
+                <div class="row">
+                  <div class="col">
+                    <p>Planifica tareas y siembras.</p>
+                    <a href="/tareas_list_planned" class="btn btn-success text-white mb-3">Planifica</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Third Feature Card -->
+          <div class="col-md-4 mb-3">
+            <div class="card h-100">
+              <div class="card-body">
+                <!-- First Row -->
+                <div class="row mb-3">
+                  <div class="col d-flex align-items-start">
+                    <div class="icon-square text-bg-primary bg-success d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+                      <svg class="bi" width="1em" height="1em"><use xlink:href="#admin"/></svg>
+                    </div>
+                    <div>
+                      <h3 class="fs-2 text-body-emphasis mb-3">Pagina de Administrador</h3>
+                    </div>
+                  </div>
+                </div>
+    
+      
+                <!-- Second Row -->
+                <div class="row">
+                  <div class="col">
+                    <p>Accese pagina de administrador.</p>
+                    <a href="/admin" class="btn btn-success text-white mb-3">Admin</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <!-- Separate row for the activities table -->
+      <div class="row">
+          <!-- Third Column for the table -->
+          <div class="col-12">
+
+                    <div class="card">
+                      <div class="card-body">
+                          <h3 class="fs-2 text-body-emphasis mb-3">Actividades ({{ start_week|date:"M d" }} - {{ end_week|date:"M d" }})</h3>
+                          
+                          <table class="table">
+                              <thead>
+                                  <tr>
+                                      <th>Actividad</th>
+                                      <th>Cosecha</th>
+                                      <th>Predio</th>
+                                      <th>Fecha Planificada</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  {% for tarea in planned_activities %}
+                                      <tr>
+                                        <td><a href="{% url 'show_task' %}?tarea_id={{ tarea.tareas_id }}">{{ tarea.nombre_de_actividad }}</a></td>   
+                                        <td>{{ tarea.nombre_de_cosecha }}</td>
+                                        <td>{{ tarea.predio }}</td>
+                                          <td>{{ tarea.fecha_planificada|date:"d-m-Y" }}</td>
+                                      </tr>
+                                  {% empty %}
+                                      <tr>
+                                          <td colspan="3">No planned activities for this week.</td>
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+          </div>
+      </div>
+  </div>
 </main>
 
-
-
-
-
-
 </html>
-

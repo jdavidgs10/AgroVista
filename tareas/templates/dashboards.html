@@ -1,0 +1,266 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+<head>
+    <script src="../assets/js/color-modes.js"></script>
+    <!--Calling Styles from css files-->
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sidebars/">
+    <link href="../static/css/styles.css" rel="stylesheet">
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/features.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="../static/media/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../static/media/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../static/media/favicon/favicon-16x16.png">
+    <link rel="manifest" href="../static/media/favicon/site.webmanifest">
+    <link rel="mask-icon" href="../static/media/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Include Bootstrap Datepicker CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+
+    <!-- Include jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <title>Inicio</title>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <!-- Content integration starts here -->
+
+
+    <div class="container">
+        <div class="container px-4 py-5" id="featured-3">
+            <!-- Dashboard content -->
+            <h1 class="pb-2 border-bottom">Dashboard</h1>
+                        <!-- Date Range Picker -->
+            <p>Select Date Range</p>
+              <div class="input-daterange input-group" id="datepicker" style="width: 250px;">
+                <input type="text" class="form-control form-control-sm" name="start" id="start" style="width: 100px;" />
+                <span class="input-group-text">to</span>
+                <input type="text" class="form-control form-control-sm" name="end" id="end" style="width: 100px;" />
+                <button class="btn btn-sm btn-primary" id="applyBtn">Apply</button>
+              </div>
+         </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="item">
+                                <canvas id="lineChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="item">
+                                <canvas id="barChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="item">
+                          <canvas id="barChart2"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="item">
+                              <canvas id="doughnutChart"></canvas>
+                      </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Content integration ends here -->
+    <main role="main" class="container">
+        <!-- Existing content here -->
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>    
+    <script>
+      // JavaScript code for rendering the charts
+      var estimates_generated_data = JSON.parse('{{ estimates_generated_data|escapejs }}');
+      var estimate_category_data = JSON.parse('{{ estimate_category_data|escapejs }}');
+      var converted_estimates_data = JSON.parse('{{ converted_estimates_data|escapejs }}');
+      var sales_rep_data = JSON.parse('{{ sales_rep_data|escapejs }}');
+  
+      var ctx1 = document.getElementById('lineChart').getContext('2d');
+      var ctx2 = document.getElementById('barChart').getContext('2d');
+      var ctx3 = document.getElementById('doughnutChart').getContext('2d'); // Define ctx3 here
+      var ctx4 = document.getElementById('barChart2').getContext('2d');
+
+  
+
+
+  $(document).ready(function() {
+    $('#datepicker').datepicker({
+        format: 'yyyy-mm-dd'
+    });
+
+    // Check if start_date and end_date exist in the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const startDate = urlParams.get('start_date');
+    const endDate = urlParams.get('end_date');
+
+    if (startDate && endDate) {
+        $('#start').val(startDate);
+        $('#end').val(endDate);
+    }
+
+    $('#applyBtn').on('click', function() {
+        const startVal = $('#start').val();
+        const endVal = $('#end').val();
+
+        if (startVal && endVal) {
+            const url = window.location.href.split('?')[0];
+            window.location.href = `${url}?start_date=${startVal}&end_date=${endVal}`;
+        }
+    });
+});
+  </script>
+  
+
+<!-- ... your existing HTML structure ... -->
+
+<div class="col-md-6">
+    <div class="item">
+        <canvas id="lluviasChart"></canvas>
+    </div>
+</div>
+
+<!-- ... -->
+
+<script>
+   var lluvias_data = JSON.parse('{{ lluvias_data|escapejs }}');
+var maxLluvia = Math.max(...lluvias_data.map(entry => entry.sum)); // Find the max value
+var minLluvia = Math.min(...lluvias_data.map(entry => entry.sum)); // Find the min value
+
+var ctxLluvias = document.getElementById('lluviasChart').getContext('2d');
+var lluviasChart = new Chart(ctxLluvias, {
+    type: 'bar',
+    data: {
+        labels: lluvias_data.map(entry => entry.day),
+        datasets: [{
+            label: 'Lluvia (mm)',
+            data: lluvias_data.map(entry => entry.sum),
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true,
+                suggestedMin: minLluvia > 0 ? minLluvia * 0.9 : 0, // Slightly below min or 0
+                suggestedMax: maxLluvia * 1.1, // Slightly above max
+                ticks: {
+                    // Include a dollar sign in the ticks and ensure proper formatting
+                    callback: function(value, index, ticks) {
+                        return value.toLocaleString();
+                    }
+                }
+            }
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            },
+            title: {
+                display: true,
+                text: 'Lluvia Diaria'
+            }
+        }
+    }
+});
+
+</script>
+
+<!-- ... -->
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="item">
+                <canvas id="tasksByPredioChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var tasksByPredioData = JSON.parse('{{ tasks_by_predio|escapejs }}');
+
+    // Prepare data for the chart
+    var predios = [];
+    var taskCounts = [];
+    tasksByPredioData.forEach(function(entry) {
+        predios.push(entry.predio__nombre);
+        taskCounts.push(entry.count);
+    });
+
+    var ctx = document.getElementById('tasksByPredioChart').getContext('2d');
+    var tasksByPredioChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: predios,
+            datasets: [{
+                label: 'Number of Tasks',
+                data: taskCounts,
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+</script>
+
+
+
+<script>
+    var gallonsByPredioData = JSON.parse('{{ gallons_by_predio|escapejs }}');
+
+    // Prepare data for the chart
+    var predios = [];
+    var gallons = [];
+    gallonsByPredioData.forEach(function(entry) {
+        predios.push(entry.predio__nombre);
+        gallons.push(entry.total_gallons);
+    });
+
+    var ctx = document.getElementById('gallonsByPredioChart').getContext('2d');
+    var gallonsByPredioChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: predios,
+            datasets: [{
+                label: 'Total Gallons',
+                data: gallons,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+</script>
+
+</body>
+</html>

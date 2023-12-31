@@ -12,6 +12,8 @@ matplotlib.use('Agg')  # Set the backend before importing pyplot
 import matplotlib.pyplot as plt
 from django.http import HttpResponse
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from django.db.models.functions import TruncDay
+
 
 
 
@@ -72,7 +74,7 @@ def tareas_list_done(request):
 
 
 def tareas_list_planned(request):
-    tareas = Tareas.objects.all()  # Fetch all Tareas from the database
+    tareas = Tareas.objects.filter(planned=True)
     return render(request, 'tareas_list_planned.html', {'tareas': tareas})
 
 
@@ -299,3 +301,124 @@ def done_add_tarea(request):
     else:
         form = DoneTareasForm()
     return render(request, 'add_tarea_done.html', {'form': form})
+
+
+# from django.shortcuts import render
+# from .models import Lluvias
+# from django.db.models.functions import TruncDay
+# from django.db.models import Sum
+# import json
+
+# def lluvias_chart(request):
+#     # Query Lluvias data
+#     lluvias_data = list(
+#         Lluvias.objects
+#         .annotate(day=TruncDay('fecha'))
+#         .values('day')
+#         .annotate(sum=Sum('lectura_de_lluvia'))
+#         .order_by('day')
+#     )
+
+#     for entry in lluvias_data:
+#         entry['day'] = entry['day'].strftime('%Y-%m-%d')
+#         entry['sum'] = float(entry['sum'])  # Ensure the sum is a float
+
+#     context = {
+#         'lluvias_data': json.dumps(lluvias_data),
+#     }
+
+#     return render(request, 'dashboard.html', context)
+
+
+from django.http import JsonResponse
+from .models import Tareas
+from django.core.serializers.json import DjangoJSONEncoder
+from django.forms.models import model_to_dict
+
+def tareas_calendar_feed(request):
+    planned_tareas = Tareas.objects.filter(planned=True).exclude(fecha_planificada=None)
+
+    events = [
+        {
+            'title': tarea.nombre_de_actividad.nombre_de_actividad if tarea.nombre_de_actividad else 'Unnamed Activity',  # Get a string property from Actividades            
+            'start': tarea.fecha_planificada.isoformat() if tarea.fecha_planificada else None,
+            'end': tarea.fecha_planificada.isoformat() if tarea.fecha_planificada else None,
+            # Add other FullCalendar event properties as needed
+        }
+        for tarea in planned_tareas
+    ]
+
+    # JsonResponse can handle this list of dictionaries without further modification
+    return JsonResponse(events, safe=False, encoder=DjangoJSONEncoder)
+
+
+
+from django.db.models import Count, Sum
+from django.shortcuts import render
+import json
+from .models import Tareas
+
+def tareas_dashboard(request):
+    # Bar Chart: Count of tasks logged for each predio, broken down by tipo_de_actividad
+    tasks_by_predio = Tareas.objects.values('predio', 'nombre_de_actividad__tipo_de_actividad__tipo_de_actividad').annotate(count=Count('tareas_id')).order_by('predio')
+
+    # Bar Chart: Amount of gallons per predio
+    gallons_by_predio = Tareas.objects.values('predio').annotate(total_gallons=Sum('cantidad_agua_galones')).order_by('predio')
+
+    # Pie Chart: Amount of tasks by nombre_de_cosecha
+    tasks_by_cosecha = Tareas.objects.values('nombre_de_cosecha__nombre_de_cosecha').annotate(count=Count('tareas_id')).order_by('nombre_de_cosecha')
+
+    # Bar Chart: Sum of cantidad_cosecha_unidades by date
+    cosecha_by_date = Tareas.objects.annotate(date=TruncDay('fecha_completada')).values('date').annotate(total_units=Sum('cantidad_cosecha_unidades')).order_by('date')
+
+    context = {
+        'tasks_by_predio': json.dumps(list(tasks_by_predio), cls=DjangoJSONEncoder),
+        'gallons_by_predio': json.dumps(list(gallons_by_predio), cls=DjangoJSONEncoder),
+        'tasks_by_cosecha': json.dumps(list(tasks_by_cosecha), cls=DjangoJSONEncoder),
+        'cosecha_by_date': json.dumps(list(cosecha_by_date), cls=DjangoJSONEncoder),
+    }
+
+    return render(request, 'dashboards.html', context)
+
+
+def show_task(request):
+    tarea_id = request.GET.get('tarea_id')
+    tarea_detail = Tareas.objects.get(tareas_id=tarea_id)
+
+    # form = UpdateTaskForm(instance=tarea_id)
+
+
+    context = {
+        "tarea_id": tarea_id,
+        "tarea": tarea_detail,
+        # "form": form
+    }
+    return render(request, 'show_task.html', context)
+
+
+
+def update_tarea(request):
+    tarea_id = request.GET.get('tarea_id')
+    selected_theme = tarea_id.nombre_de_actividad.tipo_de_actividad
+
+    if selected_theme.tipo_act_id == 2:
+        form_class = SiembraForm
+    elif selected_theme.tipo_act_id == 6:
+        form_class = CosechaForm
+    elif selected_theme.tipo_act_id == 5:
+        form_class = RiegoForm
+    elif selected_theme.tipo_act_id == 8:
+        form_class = InjertosForm
+    else:
+        form_class = TareasForm
+
+    if request.method == 'POST':
+        form = form_class(request.POST, instance=tarea_id)
+        if form.is_valid():
+            form.save()
+            return redirect('show_task')  # Redirect to a success page or list
+    else:
+        form = form_class(instance=tarea_id)
+
+    return render(request,'/update_tarea/?tarea_id={}'.format(tarea_id), {'form': form, 'tarea': tarea_id})
+

@@ -39,7 +39,7 @@
       <td>{{ tarea.tareas_id }}</td>
       <td>{{ tarea.predio }}</td>
       <td>{{ tarea.nombre_de_cosecha}}</td>
-      <td>{{ tarea.nombre_de_actividad }}</td>
+      <td><a href="{% url 'show_task' %}?tarea_id={{ tarea.tareas_id }}">{{ tarea.nombre_de_actividad }}</a></td>      
       <td>{{ tarea.fecha_completada }}</td>
         {% endif %}
         {% empty %}
