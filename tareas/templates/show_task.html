@@ -145,28 +145,14 @@
       </div>
     </div>
     
-    
-    <div class="col-12 col-md-4">
-      <div class="card">
-        <div class="card-header bg-success">
-          <h5 class="card-title">Batería Escogido</h5>
-        </div>
-        <div class="card-body">
-          <h1 class="display-5">{{ queryset.battery_storage_option_id }}</h1>
-        </div>
-      </div>
-    </div>
-
-    
-  </div>
+   
  
-  <a href="/update_tarea" class="btn btn-success text-white mb-3">Admin</a>
 
 
 <form method="post">
   {% csrf_token %}
   {{ form.as_p }}
-  <button class="btn btn-primary" type="submit" name="submit_action" value="update_task">Actualizar Tarea</button>
+  <button  a href="/update_tarea" class="btn btn-primary" type="submit" name="submit_action" value="update_tarea">Actualizar Tarea</button>
 </form>
 <br/>
 

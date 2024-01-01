@@ -1,0 +1,261 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+<head>
+    <script src="../assets/js/color-modes.js"></script>
+    <!--Calling Styles from css files-->
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sidebars/">
+    <link href="../static/css/styles.css" rel="stylesheet">
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/features.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="../static/media/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../static/media/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../static/media/favicon/favicon-16x16.png">
+    <link rel="manifest" href="../static/media/favicon/site.webmanifest">
+    <link rel="mask-icon" href="../static/media/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Include Bootstrap Datepicker CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+
+    <!-- Include jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <title>Inicio</title>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <!-- Content integration starts here -->
+
+
+    <div class="container">
+        <div class="container px-4 py-5" id="featured-3">
+            <!-- Dashboard content -->
+            <h1 class="pb-2 border-bottom">Dashboard</h1>
+                        <!-- Date Range Picker -->
+            <p>Select Date Range</p>
+            <div class="text-center my-4" style="position: top: 10px; left: 10px;">
+              <div class="input-daterange input-group" id="datepicker" style="width: 250px;">
+                <input type="text" class="form-control form-control-sm" name="start" id="start" style="width: 100px;" />
+                <span class="input-group-text">to</span>
+                <input type="text" class="form-control form-control-sm" name="end" id="end" style="width: 100px;" />
+                <button class="btn btn-sm btn-primary" id="applyBtn">Apply</button>
+              </div>
+         </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="item">
+                                <canvas id="lineChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="item">
+                                <canvas id="barChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="item">
+                          <canvas id="barChart2"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="item">
+                              <canvas id="doughnutChart"></canvas>
+                      </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Content integration ends here -->
+    <main role="main" class="container">
+        <!-- Existing content here -->
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>    
+    <script>
+      // JavaScript code for rendering the charts
+      var galones_por_predio_data = JSON.parse('{{ galones_por_predio_data|escapejs }}');
+      var numero_de_injertos_sum_data = JSON.parse('{{ numero_de_injertos_sum_data|escapejs }}');
+      var cantidad_cosecha_unidades_sum_data = JSON.parse('{{ cantidad_cosecha_unidades_sum_data|escapejs }}');
+      var predio_data = JSON.parse('{{ predio_data|escapejs }}');
+  
+      var ctx1 = document.getElementById('lineChart').getContext('2d');
+      var ctx2 = document.getElementById('barChart').getContext('2d');
+      var ctx3 = document.getElementById('doughnutChart').getContext('2d'); // Define ctx3 here
+      var ctx4 = document.getElementById('barChart2').getContext('2d');
+
+  
+      var lineChart = new Chart(ctx1, {
+          type: 'line',
+          data: {
+              labels: galones_por_predio_data.map(entry => entry.day),
+              datasets: [{
+                  label: 'Galones',
+                  data: galones_por_predio_data.map(entry => entry.count),
+                  borderColor: 'rgb(75, 192, 192)',
+                  fill: false
+              }]
+          },
+          options: {
+              responsive: true,
+              plugins: {
+                  title: {
+                      display: true,
+                      text: 'Galones over Time'
+                  }
+              }
+          }
+      });
+      var barChart = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: numero_de_injertos_sum_data.map(entry => entry.month),
+            datasets: [{
+                label: 'Sum of Injertos',
+                data: numero_de_injertos_sum_data.map(entry => entry.sum),
+                backgroundColor: 'rgb(54, 162, 235)'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Estimates created over Time'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            var label = context.dataset.label || '';
+    
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += '$' + context.parsed.y.toLocaleString();
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        callback: function(value, index, values) {
+                            return '$' + value.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+    
+  
+      var doughnutChart = new Chart(ctx3, {
+        type: 'doughnut',
+        data: {
+            labels: predio_data.map(entry => entry.sales_rep_id__first_name),
+            datasets: [{
+                label: 'Preios',
+                data: predio_data.map(entry => entry.estimate_count),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)',
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Top 10 Sales Reps by Number of Estimates'
+                }
+            }
+        }
+    });
+
+
+    var barChart2 = new Chart(ctx4, {
+      type: 'bar',
+      data: {
+          labels: predio_data.map(entry => entry.Estimate_Category_id__Estimate_Category_Name),
+          datasets: [{
+              label: 'Number of Estimates Generated',
+              data: predio_data.map(entry => entry.estimate_count),
+                        
+              backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 159, 64, 0.2)',
+              'rgba(255, 205, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(201, 203, 207, 0.2)'
+              ],
+              borderColor: [
+                'rgb(255, 99, 132)',
+                'rgb(255, 159, 64)',
+                'rgb(255, 205, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(54, 162, 235)',
+                'rgb(153, 102, 255)',
+                'rgb(201, 203, 207)'
+              ],
+          }]
+      },
+      options: {
+          responsive: true,
+          plugins: {
+              title: {
+                  display: true,
+                  text: 'Converted Estimates over Time and Total Cost'
+              }
+          }
+      }
+  });
+
+  
+
+  $(document).ready(function() {
+    $('#datepicker').datepicker({
+        format: 'yyyy-mm-dd'
+    });
+
+    // Check if start_date and end_date exist in the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const startDate = urlParams.get('start_date');
+    const endDate = urlParams.get('end_date');
+
+    if (startDate && endDate) {
+        $('#start').val(startDate);
+        $('#end').val(endDate);
+    }
+
+    $('#applyBtn').on('click', function() {
+        const startVal = $('#start').val();
+        const endVal = $('#end').val();
+
+        if (startVal && endVal) {
+            const url = window.location.href.split('?')[0];
+            window.location.href = `${url}?start_date=${startVal}&end_date=${endVal}`;
+        }
+    });
+});
+  </script>
+  
+</body>
+</html>

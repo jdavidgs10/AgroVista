@@ -28,20 +28,10 @@
     {% include 'navbar.html' %}
     <!-- Content integration starts here -->
 
-
-    <div class="container">
-        <div class="container px-4 py-5" id="featured-3">
-            <!-- Dashboard content -->
-            <h1 class="pb-2 border-bottom">Dashboard</h1>
-                        <!-- Date Range Picker -->
-            <p>Select Date Range</p>
-              <div class="input-daterange input-group" id="datepicker" style="width: 250px;">
-                <input type="text" class="form-control form-control-sm" name="start" id="start" style="width: 100px;" />
-                <span class="input-group-text">to</span>
-                <input type="text" class="form-control form-control-sm" name="end" id="end" style="width: 100px;" />
-                <button class="btn btn-sm btn-primary" id="applyBtn">Apply</button>
-              </div>
-         </div>
+    <body>
+        <div class="container">
+            <h1>Dashboard</h1>
+            
 
             <div class="container">
                 <div class="row">
@@ -69,198 +59,114 @@
             </div>
         </div>
     </div>
-    <!-- Content integration ends here -->
-    <main role="main" class="container">
-        <!-- Existing content here -->
-    </main>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>    
-    <script>
-      // JavaScript code for rendering the charts
-      var estimates_generated_data = JSON.parse('{{ estimates_generated_data|escapejs }}');
-      var estimate_category_data = JSON.parse('{{ estimate_category_data|escapejs }}');
-      var converted_estimates_data = JSON.parse('{{ converted_estimates_data|escapejs }}');
-      var sales_rep_data = JSON.parse('{{ sales_rep_data|escapejs }}');
-  
-      var ctx1 = document.getElementById('lineChart').getContext('2d');
-      var ctx2 = document.getElementById('barChart').getContext('2d');
-      var ctx3 = document.getElementById('doughnutChart').getContext('2d'); // Define ctx3 here
-      var ctx4 = document.getElementById('barChart2').getContext('2d');
 
-  
-
-
-  $(document).ready(function() {
-    $('#datepicker').datepicker({
-        format: 'yyyy-mm-dd'
-    });
-
-    // Check if start_date and end_date exist in the URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const startDate = urlParams.get('start_date');
-    const endDate = urlParams.get('end_date');
-
-    if (startDate && endDate) {
-        $('#start').val(startDate);
-        $('#end').val(endDate);
-    }
-
-    $('#applyBtn').on('click', function() {
-        const startVal = $('#start').val();
-        const endVal = $('#end').val();
-
-        if (startVal && endVal) {
-            const url = window.location.href.split('?')[0];
-            window.location.href = `${url}?start_date=${startVal}&end_date=${endVal}`;
-        }
-    });
-});
-  </script>
-  
-
-<!-- ... your existing HTML structure ... -->
-
-<div class="col-md-6">
-    <div class="item">
-        <canvas id="lluviasChart"></canvas>
-    </div>
-</div>
-
-<!-- ... -->
+    <!-- Include Chart.js library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
 <script>
-   var lluvias_data = JSON.parse('{{ lluvias_data|escapejs }}');
-var maxLluvia = Math.max(...lluvias_data.map(entry => entry.sum)); // Find the max value
-var minLluvia = Math.min(...lluvias_data.map(entry => entry.sum)); // Find the min value
-
-var ctxLluvias = document.getElementById('lluviasChart').getContext('2d');
-var lluviasChart = new Chart(ctxLluvias, {
-    type: 'bar',
-    data: {
-        labels: lluvias_data.map(entry => entry.day),
-        datasets: [{
-            label: 'Lluvia (mm)',
-            data: lluvias_data.map(entry => entry.sum),
-            backgroundColor: 'rgba(54, 162, 235, 0.6)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true,
-                suggestedMin: minLluvia > 0 ? minLluvia * 0.9 : 0, // Slightly below min or 0
-                suggestedMax: maxLluvia * 1.1, // Slightly above max
-                ticks: {
-                    // Include a dollar sign in the ticks and ensure proper formatting
-                    callback: function(value, index, ticks) {
-                        return value.toLocaleString();
-                    }
-                }
-            }
-        },
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                display: false
-            },
-            title: {
-                display: true,
-                text: 'Lluvia Diaria'
-            }
-        }
-    }
-});
-
-</script>
-
-<!-- ... -->
-
-<div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="item">
-                <canvas id="tasksByPredioChart"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
+    // JavaScript code for rendering the charts
     var tasksByPredioData = JSON.parse('{{ tasks_by_predio|escapejs }}');
+    var gallonsByPredioData = JSON.parse('{{ gallons_by_predio|escapejs }}');
+    var tasksByCosechaData = JSON.parse('{{ tasks_by_cosecha|escapejs }}');
+    var cosechaByDateData = JSON.parse('{{ cosecha_by_date|escapejs }}');
 
-    // Prepare data for the chart
-    var predios = [];
-    var taskCounts = [];
-    tasksByPredioData.forEach(function(entry) {
-        predios.push(entry.predio__nombre);
-        taskCounts.push(entry.count);
-    });
+    var ctx1 = document.getElementById('tasksByPredioChart').getContext('2d');
+    var ctx2 = document.getElementById('gallonsByPredioChart').getContext('2d');
+    var ctx3 = document.getElementById('tasksByCosechaChart').getContext('2d');
+    var ctx4 = document.getElementById('cosechaByDateChart').getContext('2d');
 
-    var ctx = document.getElementById('tasksByPredioChart').getContext('2d');
-    var tasksByPredioChart = new Chart(ctx, {
+    var tasksByPredioChart = new Chart(ctx1, {
         type: 'bar',
         data: {
-            labels: predios,
+            labels: tasksByPredioData.map(entry => entry.predio),
             datasets: [{
                 label: 'Number of Tasks',
-                data: taskCounts,
-                backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
+                data: tasksByPredioData.map(entry => entry.count),
+                backgroundColor: 'rgb(75, 192, 192)'
             }]
         },
         options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            },
             responsive: true,
-            maintainAspectRatio: false
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Tasks by Predio'
+                }
+            }
         }
     });
-</script>
 
-
-
-<script>
-    var gallonsByPredioData = JSON.parse('{{ gallons_by_predio|escapejs }}');
-
-    // Prepare data for the chart
-    var predios = [];
-    var gallons = [];
-    gallonsByPredioData.forEach(function(entry) {
-        predios.push(entry.predio__nombre);
-        gallons.push(entry.total_gallons);
-    });
-
-    var ctx = document.getElementById('gallonsByPredioChart').getContext('2d');
-    var gallonsByPredioChart = new Chart(ctx, {
+    var gallonsByPredioChart = new Chart(ctx2, {
         type: 'bar',
         data: {
-            labels: predios,
+            labels: gallonsByPredioData.map(entry => entry.predio),
             datasets: [{
                 label: 'Total Gallons',
-                data: gallons,
-                backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
+                data: gallonsByPredioData.map(entry => entry.total_gallons),
+                backgroundColor: 'rgb(54, 162, 235)'
             }]
         },
         options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            },
             responsive: true,
-            maintainAspectRatio: false
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Gallons by Predio'
+                }
+            }
         }
     });
-</script>
 
+    var tasksByCosechaChart = new Chart(ctx3, {
+        type: 'pie',
+        data: {
+            labels: tasksByCosechaData.map(entry => entry.nombre_de_cosecha__nombre_de_cosecha),
+            datasets: [{
+                label: 'Number of Tasks',
+                data: tasksByCosechaData.map(entry => entry.count),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Tasks by Cosecha'
+                }
+            }
+        }
+    });
+
+    var cosechaByDateChart = new Chart(ctx4, {
+        type: 'bar',
+        data: {
+            labels: cosechaByDateData.map(entry => entry.date),
+            datasets: [{
+                label: 'Total Units',
+                data: cosechaByDateData.map(entry => entry.total_units),
+                backgroundColor: 'rgb(75, 192, 192)'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Cosecha by Date'
+                }
+            }
+        }
+    });
+
+</script>
 </body>
 </html>

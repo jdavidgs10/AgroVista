@@ -13,6 +13,8 @@ import matplotlib.pyplot as plt
 from django.http import HttpResponse
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from django.db.models.functions import TruncDay
+from .forms import UserRegisterForm
+from django.contrib.auth.decorators import login_required
 
 
 
@@ -77,7 +79,7 @@ def tareas_list_planned(request):
     tareas = Tareas.objects.filter(planned=True)
     return render(request, 'tareas_list_planned.html', {'tareas': tareas})
 
-
+@login_required
 def home(request):
     title = 'Welcome to the Pura Energía Estimate Generator!'
     name = request.user
@@ -357,6 +359,9 @@ from django.db.models import Count, Sum
 from django.shortcuts import render
 import json
 from .models import Tareas
+from django.db.models.functions import TruncDay
+from django.core.serializers.json import DjangoJSONEncoder
+
 
 def tareas_dashboard(request):
     # Bar Chart: Count of tasks logged for each predio, broken down by tipo_de_actividad
@@ -416,9 +421,416 @@ def update_tarea(request):
         form = form_class(request.POST, instance=tarea_id)
         if form.is_valid():
             form.save()
-            return redirect('show_task')  # Redirect to a success page or list
+            return redirect('show_task', tarea_id=tarea_id)
     else:
         form = form_class(instance=tarea_id)
 
     return render(request,'/update_tarea/?tarea_id={}'.format(tarea_id), {'form': form, 'tarea': tarea_id})
 
+
+
+# from slick_reporting.views import ReportView, Chart
+# from slick_reporting.fields import ComputationField
+# from django.db.models import Sum
+# from django.db.models import Sum
+
+# class cosecha_dash(ReportView):
+#     report_model = Tareas
+#     date_field = "fecha_completada__fecha_completada"  # Use double-underscore notation to traverse the foreign key relationship
+
+#     columns = [
+#         "fecha_completada",
+#         ComputationField.create(
+#             method=Sum, field="cantidad_cosecha_lbs", name="cantidad_cosecha_lbs_sum", verbose_name="Total lbs cosechadas"
+#         ),
+#     ]
+
+#     group_by = "fecha_completada"  # Use a string instead of a list
+#     chart_settings = [
+#         Chart(
+#             "Total lbs cosechadas",
+#             Chart.BAR,
+#             data_source=["cantidad_cosecha_lbs_sum"],
+#             title_source=["fecha_completada"],
+#         ),
+#     ]
+
+
+
+def register(request):
+    if request.method == "POST":
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            
+            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            # user_id = form.cleaned_data['id']
+            # user_id = instance.id
+
+            # Set the user as not active
+            instance.is_active = False
+            form.save()
+            return redirect('/login')
+    
+    else:
+        form = UserRegisterForm()
+
+        context = {
+        "form": form 
+    }
+    
+
+    return render(request, 'register.html', {'form': form})
+
+
+
+def error_404(request, exception):
+        return render(request,'404.html')
+
+def error_500(request,  exception):
+        return render(request,'500.html')
+
+def error_403(request,  exception):
+        return render(request,'404.html')
+
+def error_400(request,  exception):
+        return render(request,'404.html')
+
+
+# from django.db.models import Count, Sum
+# from django.db.models.functions import TruncDay, TruncMonth
+# from django.http import JsonResponse
+# from django.shortcuts import render
+# import json
+# from decimal import Decimal
+
+
+# import json
+# from datetime import date
+# from datetime import date
+# from django.db.models import Sum
+# from django.db.models.functions import TruncDay, TruncMonth
+# from django.shortcuts import render
+# import json
+
+# class DecimalEncoder(json.JSONEncoder):
+#     def default(self, o):
+#         if isinstance(o, Decimal):
+#             return float(o)
+#         return super(DecimalEncoder, self).default(o)
+
+# def dashboard(request):
+#     start_date = request.GET.get('start_date')
+#     end_date = request.GET.get('end_date')
+
+#     # Replace tareas_object with the appropriate Tareas object retrieval logic
+#     tareas_object = None  # Replace None with your Tareas object retrieval logic
+
+#     if tareas_object is not None:
+#         formatted_date = tareas_object.fecha_completada.strftime('%Y-%m-%d')
+#     else:
+#         formatted_date = 'N/A'
+
+
+#     # Extract data for the line graph for the galones based on the date range
+#     if start_date and end_date:
+#         galones_por_predio_data = list(
+#             Tareas.objects
+#             .filter(fecha_completada__range=[start_date, end_date])
+#             .annotate(day=TruncDay('fecha_completada'))
+#             .filter(planned= False)  
+#             .values('day')
+#             .annotate(sum=Sum('cantidad_agua_galones'))
+#             .order_by('day')
+#         )
+#     else:
+#         galones_por_predio_data = list(
+#             Tareas.objects
+#             .annotate(day=TruncDay('fecha_completada'))
+#             .values('day')
+#             .annotate(sum=Sum('cantidad_agua_galones'))
+#             .order_by('day')
+#         )
+
+#     for entry in galones_por_predio_data:
+#         entry['day'] = entry['day'].strftime('%Y-%m-%d')
+
+#     # Extract data for the bar chart based on the sum of injertos
+#     if start_date and end_date:
+#         numero_de_injertos_sum_data = list(
+#             Tareas.objects
+#             .filter(fecha_completada__range=[start_date, end_date])
+#             .filter(planned= False)
+#             .annotate(month=TruncMonth('fecha_completada'))
+#             .values('month')
+#             .annotate(sum=Sum('numero_de_injertos'))
+#             .order_by('month')
+#         )
+#     else:
+#         numero_de_injertos_sum_data = list(
+#             Tareas.objects
+#             .annotate(month=TruncMonth('fecha_completada'))
+#             .values('month')
+#             .annotate(sum=Sum('numero_de_injertos'))
+#             .order_by('month')
+#         )
+
+#     for entry in numero_de_injertos_sum_data:
+#         entry['month'] = entry['month'].strftime('%Y-%m')
+
+#     # Extract data for the bar chart based on the sum of cosecha
+#     if start_date and end_date:
+#         cantidad_cosecha_unidades_sum_data = list(
+#             Tareas.objects
+#             .filter(fecha_completada__range=[start_date, end_date])
+#             .filter(planned= False)
+#             .annotate(month=TruncMonth('fecha_completada'))
+#             .values('month')
+#             .annotate(sum=Sum('cantidad_cosecha_unidades'))
+#             .order_by('month')
+#         )
+#     else:
+#         cantidad_cosecha_unidades_sum_data = list(
+#             Tareas.objects
+#             .annotate(month=TruncMonth('fecha_completada'))
+#             .values('month')
+#             .annotate(sum=Sum('cantidad_cosecha_unidades'))
+#             .order_by('month')
+#         )
+
+#     for entry in cantidad_cosecha_unidades_sum_data:
+#         entry['month'] = entry['month'].strftime('%Y-%m')
+
+#     # Extract data for the doughnut chart based on the date range for cantidad_siembra 
+#     if start_date and end_date:
+#         predio_data = list(
+#             Tareas.objects
+#             .filter(created_date__range=[start_date, end_date])
+#             .filter(planned= False)
+#             .values('predio')
+#             .annotate(cantidad_siembra_sum=Sum('cantidad_siembra'))
+#             .order_by('-cantidad_siembra_sum')[:10]
+#         )
+#     else:
+#         predio_data = list(
+#             Tareas.objects
+#             .values('predio')
+#             .annotate(cantidad_siembra_sum=Sum('cantidad_siembra'))
+#             .order_by('-cantidad_siembra_sum')[:10]
+#         )
+
+#     total_tareas_done = Tareas.objects.filter(planned=False).count()
+
+#     context = {
+#         'formatted_date': formatted_date,
+#         'galones_por_predio_data': json.dumps(galones_por_predio_data, cls=DecimalEncoder),
+#         'numero_de_injertos_sum_data': json.dumps(numero_de_injertos_sum_data, cls=DecimalEncoder),
+#         'predio_data': json.dumps(predio_data, cls=DecimalEncoder),
+#         'cantidad_cosecha_unidades_sum_data': json.dumps(cantidad_cosecha_unidades_sum_data, cls=DecimalEncoder),
+#         'total_tareas_done': total_tareas_done,
+#         'predio_data': json.dumps(predio_data, cls=DecimalEncoder),
+#     }
+
+#     return render(request, 'dashboard.html', context)
+
+
+from slick_reporting.views import ReportView, Chart
+from slick_reporting.fields import ComputationField
+from django.db.models import Sum
+
+
+class ProductSales(ReportView):
+
+    report_model = Tareas
+    date_field = "fecha_completada"
+    group_by = "nombre_de_actividad__nombre_de_actividad"
+
+    columns = [
+        "nombre_de_actividad",
+        ComputationField.create(
+            method=Sum, field="value", name="value__sum", verbose_name="Total sold $"
+        ),
+    ]
+
+    # Charts
+    chart_settings = [
+        Chart(
+            "Total sold $",
+            Chart.BAR,
+            data_source=["value__sum"],
+            title_source=["nombre_de_actividad"],
+        ),
+    ]
+
+from slick_reporting.views import ReportView
+from django.db.models import Count
+from slick_reporting.fields import ComputationField
+
+class ActividadesCountReport(ReportView):
+    report_model = Tareas
+    group_by = "nombre_de_actividad"
+    date_field = "fecha_completada"
+
+    
+    columns = [
+        "nombre_de_actividad",
+        ComputationField.create(
+            method=Count, field="tareas_id", name="count", verbose_name="Count of Actividades"
+        ),
+    ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        # You can apply any additional filters or queryset modifications here if needed.
+        return queryset
+
+
+
+    chart_settings = [
+        Chart(
+            "Cantidad de Actividades",
+            Chart.BAR,
+            data_source=["count"],
+            title_source=["nombre_de_actividad"],
+        )
+        
+    ]
+
+class GalonesReport(ReportView):
+    report_model = Tareas
+    date_field = "fecha_completada"
+    group_by='predio__nombre_de_predio'
+    
+    columns = [
+        ComputationField.create(
+            method=Sum, field="cantidad_agua_galones", name="cantidad_agua_galones_sum"
+        ),
+        "predio__nombre_de_predio",
+    ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        # Filter records where planned is False
+        queryset = queryset.exclude(fecha_completada__isnull=True, planned=False)
+        # You can apply any additional filters or queryset modifications here if needed.
+        return queryset
+    
+
+    chart_settings = [
+        Chart(
+            "Cantidad de Galones por Predio",
+            Chart.BAR,
+            data_source=["cantidad_agua_galones_sum"],
+            title_source=["predio__nombre_de_predio"],
+        )
+        
+    ]
+
+from slick_reporting.views import Chart
+
+class CosechaReportUnits(ReportView):
+    report_model = Tareas
+    date_field = "fecha_completada"
+    group_by = "nombre_de_cosecha__nombre_de_cosecha"
+
+    columns = [
+        "fecha_completada",
+        ComputationField.create(
+            method=Sum, field="cantidad_cosecha_unidades", name="cantidad_cosecha_unidades_sum"
+        ),
+        "nombre_de_cosecha__nombre_de_cosecha"
+    ]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        # Filter out rows where fecha_completada is null and planned is false
+        queryset = queryset.exclude(fecha_completada__isnull=True, planned=False)
+        return queryset
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    chart_settings = [
+        Chart(
+            "Cantidad de Cosecha por Fecha",
+            Chart.BAR,
+            data_source=["cantidad_cosecha_unidades_sum"],
+            title_source=["nombre_de_cosecha__nombre_de_cosecha"],
+        )
+        
+    ]
+
+
+class CosechaReportLbs(ReportView):
+    report_model = Tareas
+    date_field = "fecha_completada"
+    group_by = "nombre_de_cosecha__nombre_de_cosecha"
+
+    columns = [
+        "fecha_completada",
+        ComputationField.create(
+            method=Sum, field="cantidad_cosecha_lbs", name="cantidad_cosecha_libras_sum"
+        ),
+        "nombre_de_cosecha__nombre_de_cosecha"
+    ]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        # Filter out rows where fecha_completada is null and planned is false
+        queryset = queryset.exclude(fecha_completada__isnull=True, planned=False)
+        return queryset
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    chart_settings = [
+        Chart(
+            "Cantidad de Cosecha por Fecha",
+            Chart.BAR,
+            data_source=["cantidad_cosecha_libras_sum"],
+            title_source=["nombre_de_cosecha__nombre_de_cosecha"],
+        )
+        
+    ]
+
+
+
+
+class InjertosReport(ReportView):
+    report_model = Tareas
+    date_field = "fecha_completada"
+    group_by = "nombre_de_cosecha__nombre_de_cosecha"
+
+    columns = [
+        "fecha_completada",
+        ComputationField.create(
+            method=Sum, field="numero_de_injertos", name="numero_de_injertos_sum"
+        ),
+        "nombre_de_cosecha__nombre_de_cosecha"
+    ]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        # Filter out rows where fecha_completada is null and planned is false
+        queryset = queryset.exclude(fecha_completada__isnull=True, planned=False)
+        return queryset
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    chart_settings = [
+        Chart(
+            "Cantidad de Cosecha por Fecha",
+            Chart.BAR,
+            data_source=["numero_de_injertos_sum"],
+            title_source=["nombre_de_cosecha__nombre_de_cosecha"],
+        )
+        
+    ]

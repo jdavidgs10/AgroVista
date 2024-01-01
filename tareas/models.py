@@ -74,8 +74,8 @@ class Tareas(models.Model):
     unidades_fertilizacion = models.CharField(max_length=100,null=True)
     id_agroptima=models.IntegerField(null=True)
 
-    def __str__(self):
-        return self.nombre_de_actividad
+    # def __str__(self):
+    #     return self.nombre_de_actividad
 
 class Lluvias(models.Model):
     lluvias_id = models.AutoField('Lluvias', primary_key=True)

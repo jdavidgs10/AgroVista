@@ -20,7 +20,8 @@ from tareas import views
 from django.urls import path
 from django.contrib.auth import views as auth_view
 from django.urls import path, include
-import django_sql_dashboard
+from tareas.views import ProductSales
+from tareas.views import ActividadesCountReport, GalonesReport, CosechaReportLbs, CosechaReportUnits, InjertosReport
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -38,13 +39,22 @@ urlpatterns = [
     path('select-theme/', views.select_theme, name='select_theme'),
     path('document_activity/', views.document_activity, name='document_activity'),
     path('add_tarea_done/', views.done_add_tarea, name='add_tarea_done'),
-    # path('dashboard/', views.lluvias_chart, name='dashboard'),
+    # path('dashboard/', views.dashboard, name='dashboard'),
     path('dashboards/', views.tareas_dashboard, name='dashboards'),
-    # path("cosecha_dash/", views.cosecha_dash, name="cosecha-dash"),
+    # path("cosecha_dash/", cosecha_dash.as_view(), name="cosecha_dash"),
     path('tareas_calendar_feed/', views.tareas_calendar_feed, name='tareas_calendar_feed'),
     path('update_tarea/<int:tarea_id>/', views.update_tarea, name='update_tarea'),
     path('show_task/', views.show_task, name='show_task'),
     path('tarea/<int:tarea_id>/', views.show_task, name='show_task'),
+    path('login/', auth_view.LoginView.as_view(template_name='login.html'), name='login'),
+    path('logout/', auth_view.LogoutView.as_view(next_page='login.html'), name='logout'),
+    path('register/', views.register, name='register'),
+    path("product-sales/", ProductSales.as_view(), name="product-sales"),
+    path("ActividadesCountReport/", ActividadesCountReport.as_view(), name="ActividadesCountReport"),
+    path("GalonesReport/", GalonesReport.as_view(), name="GalonesReport"),
+    path("CosechaReportLbs/", CosechaReportLbs.as_view(), name="CosechaReportLbs"),
+    path("CosechaReportUnits/", CosechaReportUnits.as_view(), name="CosechaReportUnits"),
+    path("InjertosReport/", InjertosReport.as_view(), name="InjertosReport"),
 
 
     ]
