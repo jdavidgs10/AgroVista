@@ -47,7 +47,7 @@ urlpatterns = [
     path('show_task/', views.show_task, name='show_task'),
     path('tarea/<int:tarea_id>/', views.show_task, name='show_task'),
     path('login/', auth_view.LoginView.as_view(template_name='login.html'), name='login'),
-    path('logout/', auth_view.LogoutView.as_view(next_page='login.html'), name='logout'),
+    # path('logout/', auth_view.LogoutView.as_view(next_page='login'), name='logout'),
     path('register/', views.register, name='register'),
     path("product-sales/", ProductSales.as_view(), name="product-sales"),
     path("ActividadesCountReport/", ActividadesCountReport.as_view(), name="ActividadesCountReport"),
