@@ -1,1 +1,1 @@
-web gunicorn tareas.wsgi:application --log-file-
+web: gunicorn HG_Observa.wsgi:application --log-file -
