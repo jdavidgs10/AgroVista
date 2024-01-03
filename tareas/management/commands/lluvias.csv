@@ -1,4 +1,4 @@
-lluvia_id,fecha,lectura_de_lluvia
+lluvias_id,fecha,lectura_de_lluvia
 1,2023-01-02,0.88
 2,2023-01-04,0.13
 3,2023-01-09,1.5
