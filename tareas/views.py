@@ -28,8 +28,6 @@ def add_lluvia(request):
     else:
         form = LluviasForm()
     return render(request, 'add_lluvia.html', {'form': form})
-
-
 def planned_add_tarea(request):
     if request.method == 'POST':
         form = PlannedTareasForm(request.POST)
@@ -48,22 +46,35 @@ def planned_add_tarea(request):
             )
 
             for recipe in matching_recipes:
-                days_interval = recipe.cadence / recipe.dias if recipe.dias and recipe.cadence else 1
+                dias = recipe.dias
+                cadence = recipe.cadence
 
-                for i in range(recipe.cadence):
-                    fecha_planificada = tarea.fecha_planificada + timedelta(days=i * days_interval)
+                # Calculate the fecha_planificada for the first task
+                first_fecha_planificada = tarea.fecha_planificada + timedelta(days=dias)
+
+                new_task = Tareas(
+                    nombre_de_actividad=recipe.actividades_a_crear,
+                    nombre_de_cosecha=planned_cosecha,
+                    predio=tarea.predio,
+                    fecha_planificada=first_fecha_planificada,  # Use calculated first fecha_planificada
+                    planned=True
+                )
+                new_task.save()
+
+                for i in range(1, cadence):
+                    # Calculate the fecha_planificada for the next task by adding `dias` to the previous `new_task.fecha_planificada`
+                    new_fecha_planificada = new_task.fecha_planificada + timedelta(days=dias)
 
                     new_task = Tareas(
                         nombre_de_actividad=recipe.actividades_a_crear,
                         nombre_de_cosecha=planned_cosecha,
                         predio=tarea.predio,
-                        fecha_planificada=fecha_planificada,
+                        fecha_planificada=new_fecha_planificada,  # Use the new fecha_planificada for the next task
                         planned=True
                     )
                     new_task.save()
 
             return redirect('tareas_list_planned')
-
     else:
         form = PlannedTareasForm()
 
