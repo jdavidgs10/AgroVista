@@ -55,6 +55,7 @@ urlpatterns = [
     path("CosechaReportLbs/", CosechaReportLbs.as_view(), name="CosechaReportLbs"),
     path("CosechaReportUnits/", CosechaReportUnits.as_view(), name="CosechaReportUnits"),
     path("InjertosReport/", InjertosReport.as_view(), name="InjertosReport"),
+    path("info_repo/", views.list_info_repo, name="info_repo"),
 
 
     ]

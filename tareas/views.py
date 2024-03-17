@@ -849,3 +849,9 @@ class InjertosReport(ReportView):
         )
         
     ]
+
+
+
+def list_info_repo(request):
+    documentos = doc_repo.objects.all()  # Fetch all Tareas from the database
+    return render(request, 'info_repo.html', {'documentos': documentos})

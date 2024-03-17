@@ -49,7 +49,8 @@ class Recetas(models.Model):
     dias = models.IntegerField(null=True)
 
     def __str__(self):
-        return f"Receta para {self.cosecha_asociada.nombre_de_cosecha}"
+        return f"  {self.actividades_a_crear.nombre_de_actividad} {self.trigger_actividad_asociado.nombre_de_actividad} {self.cosecha_asociada.nombre_de_cosecha}"
+
 
 class Tareas(models.Model):
     tareas_id = models.AutoField('tareas', primary_key=True)
@@ -85,8 +86,8 @@ class Tareas(models.Model):
 
 
 
-    # def __str__(self):
-    #     return self.nombre_de_actividad
+    def __str__(self):
+        return self.nombre_de_actividad
 
 
 
@@ -122,3 +123,26 @@ class Tipo_de_Actividad(models.Model):
  
     def __str__(self):
         return self.tipo_de_actividad
+    
+
+
+class doc_repo(models.Model):
+    document_id = models.AutoField('Theme', primary_key=True)
+    nombre_documento = models.CharField(max_length=200, null=True)  # String field for the product type
+    cosecha_asociada = models.ForeignKey('Cosechas', on_delete=models.CASCADE, null=True)
+    producto_asociado = models.ForeignKey('Productos', on_delete=models.CASCADE, null=True)
+    descripcion = models.TextField(null=True, blank=True)  # Text field for the description
+    url_documento = models.URLField(max_length = 200) 
+
+    def __str__(self):
+        return f"  {self.nombre_documento} {self.cosecha_asociada.nombre_de_cosecha} {self.producto_asociado.nombre_de_producto}"
+    
+
+class Indice_Calor(models.Model):
+    indice_id = models.AutoField('Lluvias', primary_key=True)
+    fecha = models.DateField(null=True)  # Date field for the date of the rainfall
+    lectura_de_temperatura = models.FloatField(null=True)  # Integer field for the rainfall measurement
+    lectura_de_humedad = models.FloatField(null=True)  # Integer field for the rainfall measurement
+    indice_de_calor = models.FloatField(null=True)  # Integer field for the rainfall measurement
+    descripcion = models.TextField(null=True, blank=True)  # Text field for the description
+

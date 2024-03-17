@@ -60,6 +60,7 @@ class DoneTareasForm(forms.ModelForm):
 
 class SiembraForm(forms.ModelForm):
     unidades_siembra_choices = [
+        ('', ''),
         ('Unidad', 'Unidad'),
         ('Libras', 'Libras'),
     ]
@@ -71,6 +72,7 @@ class SiembraForm(forms.ModelForm):
         fields = ['nombre_de_actividad','nombre_de_cosecha', 'predio', 'empleado', 'fecha_completada', 'cantidad_siembra', 'unidades_siembra', 'tiempo_de_actividad', 'notas']  # Fields relevant to planting
         widgets = {
             'fecha_completada': forms.DateInput(attrs={'type': 'date'}),
+            'cantidad_siembra': forms.TextInput(attrs={'placeholder': 'Solo valores numéricos', 'title': 'Solo valores numéricos'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -107,7 +109,7 @@ class RiegoForm(forms.ModelForm):
     
     class Meta:
         model = Tareas
-        fields = ['nombre_de_actividad','nombre_de_cosecha', 'predio', 'empleado', 'fecha_completada', 'origen_agua', 'cantidad_agua_tiempo', 'cantidad_agua_galones', 'tiempo_de_actividad', 'notas'] # Fields relevant to planting
+        fields = ['nombre_de_actividad','nombre_de_cosecha', 'predio', 'empleado', 'fecha_completada', 'origen_agua', 'cantidad_agua_tiempo', 'cantidad_agua_galones', 'notas'] # Fields relevant to planting
 
         widgets = {
             'fecha_completada': forms.DateInput(attrs={'type': 'date'}),
@@ -160,11 +162,22 @@ class PlaguicidaForm(forms.ModelForm):
 
 class AbonamientoForm(forms.ModelForm):
     unidades_fertilizacion = [
+        ('', ''),
         ('Oz', 'Oz'),
         ('Libras', 'Libras'),
     ]
     
     unidades_fertilizacion = forms.ChoiceField(choices=unidades_fertilizacion, required=True, label='Unidades de Abono')
+    
+    tipo_abono = [
+        ('', ''),
+        ('Foliar', 'Foliar'),
+        ('Granular', 'Gralunar'),
+
+    ]
+    
+    tipo_de_abono = forms.ChoiceField(choices=tipo_abono, required=True, label='Tipo de Abono')
+
 
     class Meta:
         model = Tareas
