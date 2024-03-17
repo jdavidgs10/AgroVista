@@ -71,12 +71,19 @@ class Tareas(models.Model):
     cantidad_cosecha_unidades = models.IntegerField(null=True)
     cantidad_cosecha_lbs = models.IntegerField(null=True)
     producto_utilizado = models.ForeignKey('Productos', on_delete=models.CASCADE, related_name='producto_utilizado', null=True)
+    tipo_de_plaguicida=models.CharField(max_length=100,null=True)
     cantidad_producto = models.IntegerField(null=True)
     cantidad_agua_plaguicida_utilizada=models.IntegerField(null=True)
     razon_de_utilizar_producto=models.CharField(max_length=50, null=True)
     unidades_fertilizacion = models.CharField(max_length=100,null=True)
     tipo_de_abono=models.CharField(max_length=100,null=True)
     id_agroptima=models.IntegerField(null=True)
+    cantidad_final=models.IntegerField(null=True)
+    cantidad_principal=models.IntegerField(null=True)
+    tipo_de_semilla=models.CharField(max_length=100,null=True)
+    procedencia_de_semilla=models.CharField(max_length=100,null=True)
+
+
 
     # def __str__(self):
     #     return self.nombre_de_actividad

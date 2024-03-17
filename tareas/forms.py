@@ -57,9 +57,8 @@ class DoneTareasForm(forms.ModelForm):
             self.fields[field].required = False
 
 
+
 class SiembraForm(forms.ModelForm):
-   
-   
     unidades_siembra_choices = [
         ('Unidad', 'Unidad'),
         ('Libras', 'Libras'),
@@ -74,11 +73,11 @@ class SiembraForm(forms.ModelForm):
             'fecha_completada': forms.DateInput(attrs={'type': 'date'}),
         }
 
-def __init__(self, *args, **kwargs):
-    super(SiembraForm, self).__init__(*args, **kwargs)
-    filtered_activities = Actividades.objects.filter(tipo_de_actividad=2)
-    print("Filtered activities: ", filtered_activities)  # Debug print
-    self.fields['nombre_de_actividad'].queryset = filtered_activities
+    def __init__(self, *args, **kwargs):
+        tipo_de_actividad_id = kwargs.pop('tipo_de_actividad_id')
+        super(SiembraForm, self).__init__(*args, **kwargs)
+        filtered_activities = Actividades.objects.filter(tipo_de_actividad=tipo_de_actividad_id)
+        self.fields['nombre_de_actividad'].queryset = filtered_activities
 
 class CosechaForm(forms.ModelForm):
     class Meta:
@@ -88,11 +87,11 @@ class CosechaForm(forms.ModelForm):
             'fecha_completada': forms.DateInput(attrs={'type': 'date'}),
         }
 
-def __init__(self, *args, **kwargs):
-    super(SiembraForm, self).__init__(*args, **kwargs)
-    filtered_activities = Actividades.objects.filter(tipo_de_actividad=6)
-    print("Filtered activities: ", filtered_activities)  # Debug print
-    self.fields['nombre_de_actividad'].queryset = filtered_activities
+    def __init__(self, *args, **kwargs):
+        tipo_de_actividad_id = kwargs.pop('tipo_de_actividad_id')
+        super(CosechaForm, self).__init__(*args, **kwargs)
+        filtered_activities = Actividades.objects.filter(tipo_de_actividad=tipo_de_actividad_id)
+        self.fields['nombre_de_actividad'].queryset = filtered_activities
 
 class RiegoForm(forms.ModelForm):
     origen_agua = [
@@ -113,6 +112,13 @@ class RiegoForm(forms.ModelForm):
         widgets = {
             'fecha_completada': forms.DateInput(attrs={'type': 'date'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        tipo_de_actividad_id = kwargs.pop('tipo_de_actividad_id')
+        super(RiegoForm, self).__init__(*args, **kwargs)
+        filtered_activities = Actividades.objects.filter(tipo_de_actividad=tipo_de_actividad_id)
+        self.fields['nombre_de_actividad'].queryset = filtered_activities
+
 class InjertosForm(forms.ModelForm):
     class Meta:
         model = Tareas
@@ -122,22 +128,34 @@ class InjertosForm(forms.ModelForm):
             'fecha_completada': forms.DateInput(attrs={'type': 'date'}),
         }
 
-class PlaguicidaForm(forms.ModelForm):
-    # tipo_de_plaguicida = [
-    #     ('', ''),
-    #     ('Fungicida', 'Fungicida'),
-    #     ('Yerbicida', 'Yerbicida'),
-    #     ('Nematicida', 'Nematicida'),
-    #     ('Insecticida', 'Insecticida'),
+    def __init__(self, *args, **kwargs):
+        tipo_de_actividad_id = kwargs.pop('tipo_de_actividad_id')
+        super(InjertosForm, self).__init__(*args, **kwargs)
+        filtered_activities = Actividades.objects.filter(tipo_de_actividad=tipo_de_actividad_id)
+        self.fields['nombre_de_actividad'].queryset = filtered_activities
 
-    # ]
+class PlaguicidaForm(forms.ModelForm):
+    tipo_de_plaguicida = [
+        ('', ''),
+        ('Fungicida', 'Fungicida'),
+        ('Yerbicida', 'Yerbicida'),
+        ('Nematicida', 'Nematicida'),
+        ('Insecticida', 'Insecticida'),
+
+    ]
     class Meta:
         model = Tareas
-        fields = ['nombre_de_actividad','nombre_de_cosecha', 'predio', 'empleado', 'fecha_completada', 'producto_utilizado','cantidad_producto','cantidad_agua_plaguicida_utilizada','razon_de_utilizar_producto','tiempo_de_actividad', 'notas' ]  # Fields relevant to harvesting
+        fields = ['nombre_de_actividad','nombre_de_cosecha', 'predio', 'empleado', 'fecha_completada', 'tipo_de_plaguicida','producto_utilizado','cantidad_producto','cantidad_agua_plaguicida_utilizada','razon_de_utilizar_producto','tiempo_de_actividad', 'notas' ]  # Fields relevant to harvesting
 
         widgets = {
             'fecha_completada': forms.DateInput(attrs={'type': 'date'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        tipo_de_actividad_id = kwargs.pop('tipo_de_actividad_id')
+        super(PlaguicidaForm, self).__init__(*args, **kwargs)
+        filtered_activities = Actividades.objects.filter(tipo_de_actividad=tipo_de_actividad_id)
+        self.fields['nombre_de_actividad'].queryset = filtered_activities
 
 
 class AbonamientoForm(forms.ModelForm):
@@ -146,7 +164,7 @@ class AbonamientoForm(forms.ModelForm):
         ('Libras', 'Libras'),
     ]
     
-    unidades_fertilizacion = forms.ChoiceField(choices=unidades_fertilizacion, required=True, label='Unidades de Siembra')
+    unidades_fertilizacion = forms.ChoiceField(choices=unidades_fertilizacion, required=True, label='Unidades de Abono')
 
     class Meta:
         model = Tareas
@@ -157,6 +175,33 @@ class AbonamientoForm(forms.ModelForm):
         }
 
 
+    def __init__(self, *args, **kwargs):
+        tipo_de_actividad_id = kwargs.pop('tipo_de_actividad_id')
+        super(AbonamientoForm, self).__init__(*args, **kwargs)
+        filtered_activities = Actividades.objects.filter(tipo_de_actividad=tipo_de_actividad_id)
+        self.fields['nombre_de_actividad'].queryset = filtered_activities
+
+class SemillaPrepFrom(forms.ModelForm):
+    tipo_semilla_choices = [
+        ('Oz', 'Oz'),
+        ('Libras', 'Libras'),
+    ]
+    
+    tipo_semilla = forms.ChoiceField(choices=tipo_semilla_choices, required=True, label='Tipo de Semilla')
+
+    class Meta:
+        model = Tareas
+        fields = ['nombre_de_actividad','nombre_de_cosecha', 'predio', 'empleado', 'fecha_completada','tipo_semilla','procedencia_de_semilla','cantidad_principal','cantidad_final','tiempo_de_actividad', 'notas' ]  # Fields relevant to harvesting
+
+        widgets = {
+            'fecha_completada': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        tipo_de_actividad_id = kwargs.pop('tipo_de_actividad_id')
+        super(SemillaPrepFrom, self).__init__(*args, **kwargs)
+        filtered_activities = Actividades.objects.filter(tipo_de_actividad=tipo_de_actividad_id)
+        self.fields['nombre_de_actividad'].queryset = filtered_activities
 
 class TareasForm(forms.ModelForm):
     class Meta:

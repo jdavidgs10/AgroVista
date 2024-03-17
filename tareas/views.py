@@ -264,7 +264,6 @@ def select_theme(request):
 #         # Handle the case where no form matches the selected theme
 #         return HttpResponse("No form available for the selected theme.", status=404)
 
-
 def document_activity(request):
     activity_form = None
     theme_id = request.GET.get('tipo_de_actividad_id')  # Retrieve from GET parameters
@@ -275,17 +274,19 @@ def document_activity(request):
         return redirect('select_theme')
 
     if selected_theme.tipo_act_id == 2:
-        activity_form = SiembraForm(request.POST or None)
+        activity_form = SiembraForm(request.POST or None, tipo_de_actividad_id=theme_id)
     elif selected_theme.tipo_act_id == 6:
-        activity_form = CosechaForm(request.POST or None)
+        activity_form = CosechaForm(request.POST or None, tipo_de_actividad_id=theme_id)
     elif selected_theme.tipo_act_id == 5:
-        activity_form = RiegoForm(request.POST or None)
+        activity_form = RiegoForm(request.POST or None, tipo_de_actividad_id=theme_id)
     elif selected_theme.tipo_act_id == 3:
-        activity_form = PlaguicidaForm(request.POST or None)
+        activity_form = PlaguicidaForm(request.POST or None, tipo_de_actividad_id=theme_id)
     elif selected_theme.tipo_act_id == 4:
-        activity_form = AbonamientoForm(request.POST or None)
+        activity_form = AbonamientoForm(request.POST or None, tipo_de_actividad_id=theme_id)
     elif selected_theme.tipo_act_id == 8:
-        activity_form = InjertosForm(request.POST or None)
+        activity_form = InjertosForm(request.POST or None, tipo_de_actividad_id=theme_id)
+    elif selected_theme.tipo_act_id == 10:
+        activity_form = SemillaPrepFrom(request.POST or None, tipo_de_actividad_id=theme_id)
     else: 
         activity_form = TareasForm(request.POST or None)
 
@@ -301,8 +302,6 @@ def document_activity(request):
         return render(request, 'add_tarea_done.html', context)
     else:
         return HttpResponse("No form available for the selected theme.", status=404)
-
-
 
 
 
