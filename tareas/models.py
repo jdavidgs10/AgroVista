@@ -65,7 +65,7 @@ class Tareas(models.Model):
     numero_de_injertos = models.IntegerField(null=True)
     cantidad_agua_galones = models.IntegerField(null=True, blank=True)
     cantidad_agua_tiempo = models.IntegerField(null=True)
-    origen_agua = models.TextField(null=True)
+    origen_agua = models.CharField(max_length=50, null=True)
     cantidad_siembra = models.IntegerField(null=True)
     unidades_siembra = models.CharField(max_length=50, null=True)  # Assuming a predefined set of units
     cantidad_cosecha_unidades = models.IntegerField(null=True)
@@ -73,8 +73,9 @@ class Tareas(models.Model):
     producto_utilizado = models.ForeignKey('Productos', on_delete=models.CASCADE, related_name='producto_utilizado', null=True)
     cantidad_producto = models.IntegerField(null=True)
     cantidad_agua_plaguicida_utilizada=models.IntegerField(null=True)
-    razon_de_utilizar_producto=models.TextField(null=True)
+    razon_de_utilizar_producto=models.CharField(max_length=50, null=True)
     unidades_fertilizacion = models.CharField(max_length=100,null=True)
+    tipo_de_abono=models.CharField(max_length=100,null=True)
     id_agroptima=models.IntegerField(null=True)
 
     # def __str__(self):
@@ -95,7 +96,11 @@ class Lluvias(models.Model):
 class Productos(models.Model):
     producto_id = models.AutoField('Productos', primary_key=True)
     nombre_de_producto = models.CharField(max_length=200,null=True)  # String field for the product name
-    tipo_de_producto = models.CharField(max_length=200, null=True)  # String field for the product type
+    tipo_de_producto = models.CharField(max_length=200, null=True)  # String field for the product type. Plaguicida/Abonamiento
+    plaguicida_check = models.BooleanField(null=True)
+    abonamiento_check = models.BooleanField(null=True)
+    tipo_de_plaguicida = models.CharField(max_length=200, null=True)  # String field for the product type. Plaguicida/Abonamiento
+    tipo_de_abonamiento = models.CharField(max_length=200, null=True)  # String field for the product type. Plaguicida/Abonamiento
     costo = models.DecimalField(max_digits=10, decimal_places=2, null=True)  # Currency field for the cost
     descripcion = models.TextField(null=True, blank=True)  # Text field for the description
 

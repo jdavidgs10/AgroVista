@@ -280,8 +280,10 @@ def document_activity(request):
         activity_form = CosechaForm(request.POST or None)
     elif selected_theme.tipo_act_id == 5:
         activity_form = RiegoForm(request.POST or None)
-    elif selected_theme.tipo_act_id == 6:
-        activity_form = InjertosForm(request.POST or None)
+    elif selected_theme.tipo_act_id == 3:
+        activity_form = PlaguicidaForm(request.POST or None)
+    elif selected_theme.tipo_act_id == 4:
+        activity_form = AbonamientoForm(request.POST or None)
     elif selected_theme.tipo_act_id == 8:
         activity_form = InjertosForm(request.POST or None)
     else: 
@@ -299,7 +301,6 @@ def document_activity(request):
         return render(request, 'add_tarea_done.html', context)
     else:
         return HttpResponse("No form available for the selected theme.", status=404)
-
 
 
 
@@ -425,6 +426,10 @@ def update_tarea(request):
         form_class = RiegoForm
     elif selected_theme.tipo_act_id == 8:
         form_class = InjertosForm
+    elif selected_theme.tipo_act_id == 3:
+        form_class = PlaguicidaForm
+    elif selected_theme.tipo_act_id == 4:
+        form_class = AbonamientoForm                
     else:
         form_class = TareasForm
 

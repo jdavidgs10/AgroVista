@@ -122,6 +122,42 @@ class InjertosForm(forms.ModelForm):
             'fecha_completada': forms.DateInput(attrs={'type': 'date'}),
         }
 
+class PlaguicidaForm(forms.ModelForm):
+    # tipo_de_plaguicida = [
+    #     ('', ''),
+    #     ('Fungicida', 'Fungicida'),
+    #     ('Yerbicida', 'Yerbicida'),
+    #     ('Nematicida', 'Nematicida'),
+    #     ('Insecticida', 'Insecticida'),
+
+    # ]
+    class Meta:
+        model = Tareas
+        fields = ['nombre_de_actividad','nombre_de_cosecha', 'predio', 'empleado', 'fecha_completada', 'producto_utilizado','cantidad_producto','cantidad_agua_plaguicida_utilizada','razon_de_utilizar_producto','tiempo_de_actividad', 'notas' ]  # Fields relevant to harvesting
+
+        widgets = {
+            'fecha_completada': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+
+class AbonamientoForm(forms.ModelForm):
+    unidades_fertilizacion = [
+        ('Oz', 'Oz'),
+        ('Libras', 'Libras'),
+    ]
+    
+    unidades_fertilizacion = forms.ChoiceField(choices=unidades_fertilizacion, required=True, label='Unidades de Siembra')
+
+    class Meta:
+        model = Tareas
+        fields = ['nombre_de_actividad','nombre_de_cosecha', 'predio', 'empleado', 'fecha_completada','producto_utilizado','cantidad_producto','unidades_fertilizacion','tipo_de_abono','razon_de_utilizar_producto','tiempo_de_actividad', 'notas' ]  # Fields relevant to harvesting
+
+        widgets = {
+            'fecha_completada': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+
+
 class TareasForm(forms.ModelForm):
     class Meta:
         model = Tareas
