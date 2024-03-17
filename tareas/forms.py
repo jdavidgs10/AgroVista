@@ -17,6 +17,8 @@ class PlannedTareasForm(forms.ModelForm):
         }
 
 
+
+
 class RecetasForm(forms.ModelForm):
     class Meta:
         model = Recetas
@@ -34,6 +36,14 @@ class ThemeSelectionForm(forms.Form):
 
 
 class DoneTareasForm(forms.ModelForm):
+    
+    unidades_siembra_choices = [
+        ('Oz', 'Oz'),
+        ('Libras', 'Libras'),
+    ]
+    
+    unidades_siembra = forms.ChoiceField(choices=unidades_siembra_choices, required=True, label='Unidades de Siembra')
+
     class Meta:
         model = Tareas
         fields = '__all__'  # Or specify specific fields if needed
@@ -47,8 +57,16 @@ class DoneTareasForm(forms.ModelForm):
             self.fields[field].required = False
 
 
-
 class SiembraForm(forms.ModelForm):
+   
+   
+    unidades_siembra_choices = [
+        ('Unidad', 'Unidad'),
+        ('Libras', 'Libras'),
+    ]
+    
+    unidades_siembra = forms.ChoiceField(choices=unidades_siembra_choices, required=True, label='Unidades de Siembra')
+
     class Meta:
         model = Tareas
         fields = ['nombre_de_actividad','nombre_de_cosecha', 'predio', 'empleado', 'fecha_completada', 'cantidad_siembra', 'unidades_siembra', 'tiempo_de_actividad', 'notas']  # Fields relevant to planting
@@ -77,9 +95,20 @@ def __init__(self, *args, **kwargs):
     self.fields['nombre_de_actividad'].queryset = filtered_activities
 
 class RiegoForm(forms.ModelForm):
+    origen_agua = [
+        ('', ''),
+        ('Pozo', 'Pozo'),
+        ('Quebrada', 'Quebrada'),
+        ('Potable', 'Potable'),
+
+    ]
+    
+    origen_agua = forms.ChoiceField(choices=origen_agua, required=True, label='Origen del Agua')
+
+    
     class Meta:
         model = Tareas
-        fields = ['nombre_de_actividad','nombre_de_cosecha', 'predio', 'empleado', 'fecha_completada',  'cantidad_agua_galones', 'cantidad_agua_tiempo', 'tiempo_de_actividad', 'notas'] # Fields relevant to planting
+        fields = ['nombre_de_actividad','nombre_de_cosecha', 'predio', 'empleado', 'fecha_completada', 'origen_agua', 'cantidad_agua_tiempo', 'cantidad_agua_galones', 'tiempo_de_actividad', 'notas'] # Fields relevant to planting
 
         widgets = {
             'fecha_completada': forms.DateInput(attrs={'type': 'date'}),
