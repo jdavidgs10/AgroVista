@@ -219,12 +219,22 @@ class SemillaPrepFrom(forms.ModelForm):
 class TareasForm(forms.ModelForm):
     class Meta:
         model = Tareas
-        fields = ['nombre_de_actividad','nombre_de_cosecha', 'predio', 'empleado', 'fecha_completada','tiempo_de_actividad', 'notas' ]  # Fields relevant to harvesting
-
+        fields = ['nombre_de_actividad', 'nombre_de_cosecha', 'predio', 'empleado', 'fecha_completada', 'tiempo_de_actividad', 'notas']
         widgets = {
             'fecha_completada': forms.DateInput(attrs={'type': 'date'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        tipo_de_actividad_id = kwargs.pop('tipo_de_actividad_id', None)  # Use None as default if 'tipo_de_actividad_id' not provided
+        super(TareasForm, self).__init__(*args, **kwargs)
+        
+        if tipo_de_actividad_id:
+            filtered_activities = Actividades.objects.filter(tipo_de_actividad=tipo_de_actividad_id)
+            self.fields['nombre_de_actividad'].queryset = filtered_activities
+        else:
+            # Here, decide on how you want to handle the case when tipo_de_actividad_id is not provided.
+            # For example, you can leave the queryset unfiltered or filter it based on some default criteria.
+            self.fields['nombre_de_actividad'].queryset = Actividades.objects.all()
 
 class UpdateTaskForm(forms.ModelForm):
     class Meta:
@@ -242,3 +252,23 @@ class UserRegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name','username', 'email', 'password1', 'password2']
+
+
+
+class DynamicTaskForm(forms.ModelForm):
+    class Meta:
+        model = Tareas
+        fields = ['nombre_de_actividad','nombre_de_cosecha','fecha_completada','notas','predio', 'empleado']  # Assuming these are the names of your model fields
+
+    def __init__(self, *args, **kwargs):
+        tipo_actividad_id = kwargs.pop('tipo_actividad_id', None)
+        super(DynamicTaskForm, self).__init__(*args, **kwargs)
+        
+        if tipo_actividad_id:
+            info_fields = InfoPorActividad.objects.filter(tipo_de_actividad_id=tipo_actividad_id)
+            for field in info_fields:
+                if field.data_type == 'string':
+                    self.fields[field.data_name] = forms.CharField(required=False)
+                elif field.data_type == 'integer':
+                    self.fields[field.data_name] = forms.IntegerField(required=False)
+

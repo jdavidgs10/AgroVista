@@ -17,7 +17,8 @@ class Predios(models.Model):
     tamaño_de_predio = models.IntegerField(null=True)  # Integer field for the size of the predio in hectares
 
     def __str__(self):
-        return self.nombre_de_predio
+        return f"{self.nombre_de_predio}"
+
     
 
 class Actividades(models.Model):
@@ -28,7 +29,8 @@ class Actividades(models.Model):
     tipo_de_actividad = models.ForeignKey('Tipo_de_Actividad', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.nombre_de_actividad
+        return f"{self.nombre_de_actividad}"
+    
     
 class Cosechas(models.Model):
     cosecha_id = models.AutoField('Cosechas', primary_key=True)
@@ -36,7 +38,7 @@ class Cosechas(models.Model):
     descripcion = models.TextField(null=True)  # Text field for the description
 
     def __str__(self):
-        return self.nombre_de_cosecha
+        return f"{self.nombre_de_cosecha}"
     
 class Recetas(models.Model):
     receta_id = models.AutoField('Recetas', primary_key=True)
@@ -83,11 +85,13 @@ class Tareas(models.Model):
     cantidad_principal=models.IntegerField(null=True)
     tipo_de_semilla=models.CharField(max_length=100,null=True)
     procedencia_de_semilla=models.CharField(max_length=100,null=True)
+    
 
 
 
     def __str__(self):
-        return self.nombre_de_actividad
+        return f"{self.nombre_de_actividad}"
+
 
 
 
@@ -112,8 +116,9 @@ class Productos(models.Model):
     costo = models.DecimalField(max_digits=10, decimal_places=2, null=True)  # Currency field for the cost
     descripcion = models.TextField(null=True, blank=True)  # Text field for the description
 
-    def __str__(self):
-        return self.nombre_de_producto
+    def __str__(self): 
+        return f"{self.nombre_de_producto}"
+
 
 
 class Tipo_de_Actividad(models.Model):
@@ -122,7 +127,7 @@ class Tipo_de_Actividad(models.Model):
     descripcion = models.TextField(null=True, blank=True)  # Text field for the description
  
     def __str__(self):
-        return self.tipo_de_actividad
+        return f"{self.tipo_de_actividad}"
     
 
 
@@ -146,3 +151,13 @@ class Indice_Calor(models.Model):
     indice_de_calor = models.FloatField(null=True)  # Integer field for the rainfall measurement
     descripcion = models.TextField(null=True, blank=True)  # Text field for the description
 
+
+class InfoPorActividad(models.Model):
+    tipo_de_actividad = models.ForeignKey(Tipo_de_Actividad, on_delete=models.CASCADE)
+    data_name = models.CharField(max_length=100)
+    data_type = models.CharField(max_length=50)  # Could be 'string', 'integer', etc.
+
+class Data_Por_Tarea(models.Model):
+    tarea = models.ForeignKey(Tareas, on_delete=models.CASCADE)
+    info_por_actividad = models.ForeignKey(InfoPorActividad, on_delete=models.CASCADE)
+    value = models.TextField()  # Store all values as text; interpret based on data_type in InfoPorActividad
