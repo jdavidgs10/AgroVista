@@ -15,6 +15,36 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from django.db.models.functions import TruncDay
 from .forms import UserRegisterForm
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from .models import Tareas
+from django.core.serializers.json import DjangoJSONEncoder
+from django.forms.models import model_to_dict
+
+@login_required
+def home(request):
+    title = 'Welcome to the Pura Energía Estimate Generator!'
+    name = request.user
+
+    today = datetime.today()
+    start_week = today - timedelta(days=today.weekday())
+    end_week = start_week + timedelta(days=6)
+
+    # Fetch planned activities for the week
+    planned_activities = Tareas.objects.filter(
+        fecha_planificada__range=[start_week, end_week],
+        planned=True  # Assuming you have a 'planned' field to indicate planned activities
+    )
+
+    context = {
+        "title": title,
+        "name": name,
+        'planned_activities': planned_activities,
+        'start_week': start_week,
+        'end_week': end_week
+        
+    }
+
+    return render(request, 'home.html', context)
 
 
 
@@ -28,6 +58,8 @@ def add_lluvia(request):
     else:
         form = LluviasForm()
     return render(request, 'add_lluvia.html', {'form': form})
+
+
 def planned_add_tarea(request):
     if request.method == 'POST':
         form = PlannedTareasForm(request.POST)
@@ -90,34 +122,6 @@ def tareas_list_planned(request):
     tareas = Tareas.objects.filter(planned=True)
     return render(request, 'tareas_list_planned.html', {'tareas': tareas})
 
-@login_required
-def home(request):
-    title = 'Welcome to the Pura Energía Estimate Generator!'
-    name = request.user
-
-    today = datetime.today()
-    start_week = today - timedelta(days=today.weekday())
-    end_week = start_week + timedelta(days=6)
-
-    # Fetch planned activities for the week
-    planned_activities = Tareas.objects.filter(
-        fecha_planificada__range=[start_week, end_week],
-        planned=True  # Assuming you have a 'planned' field to indicate planned activities
-    )
-
-    context = {
-        "title": title,
-        "name": name,
-        'planned_activities': planned_activities,
-        'start_week': start_week,
-        'end_week': end_week
-        
-    }
-
-    return render(request, 'home.html', context)
-
-
-
 def graph_lluvias(request):
     # Find the range of dates in Lluvias data
     start_date = Lluvias.objects.order_by('fecha').first().fecha if Lluvias.objects.exists() else date.today()
@@ -156,8 +160,6 @@ def show_graph(request):
     return render(request, 'display_graph.html')
 
 
-
-
 def create_receta(request):
     if request.method == 'POST':
         form = RecetasForm(request.POST)
@@ -173,11 +175,6 @@ def create_receta(request):
         form = RecetasForm()
     return render(request, 'create_receta.html', {'form': form})
 
-
-from django.http import JsonResponse
-from .models import Tareas
-from django.core.serializers.json import DjangoJSONEncoder
-from django.forms.models import model_to_dict
 
 def tareas_calendar_feed(request):
     planned_tareas = Tareas.objects.filter(planned=True).exclude(fecha_planificada=None)
@@ -528,49 +525,54 @@ def calendar_view(request):
     events = Tareas.objects.all()  # You may need to adjust this query to filter events
     
     return render(request, 'calendar.html', {'events': events})
-def document_activity(request):
-    if request.method == 'POST':
-        # Use the same parameter name as used in the GET request
-        form = DynamicTaskForm(request.POST, tipo_actividad_id=request.POST.get('tipo_de_actividad_id'))
-        if form.is_valid():
-            tarea = form.save(commit=False)
-            tarea.save()
 
-            # Fetch custom fields based on tipo_de_actividad_id from the POST data
-            info_fields = InfoPorActividad.objects.filter(tipo_de_actividad_id=request.POST.get('tipo_de_actividad_id'))
-            for field in info_fields:
-                Data_Por_Tarea.objects.create(
-                    tarea=tarea,
-                    info_por_actividad=field,
-                    value=form.cleaned_data.get(field.data_name)
-                )
 
-            return redirect('tareas_list_done')
-    else:
-        # Fetch the ID from the GET request
-        tipo_actividad_id = request.GET.get('tipo_de_actividad_id')
-        form = DynamicTaskForm(tipo_actividad_id=tipo_actividad_id)
 
-    return render(request, 'add_tarea_done.html', {'form': form})
-def get_custom_fields(request):
-    tipo_actividad_id = request.GET.get('tipo_de_actividad_id')
-    fields = InfoPorActividad.objects.filter(tipo_de_actividad_id=tipo_actividad_id)
-    html_form = ""
+# def document_activity(request):
+#     if request.method == 'POST':
+#         # Use the same parameter name as used in the GET request
+#         form = DynamicTaskForm(request.POST, tipo_actividad_id=request.POST.get('tipo_de_actividad_id'))
+#         if form.is_valid():
+#             tarea = form.save(commit=False)
+#             tarea.save()
 
-    for field in fields:
-        if field.data_type == 'string':
-            html_form += f'<div class="form-group"><label>{field.data_name}</label><input type="text" name="{field.data_name}" class="form-control"></div>'
-        elif field.data_type == 'integer':
-            html_form += f'<div class="form-group"><label>{field.data_name}</label><input type="number" name="{field.data_name}" class="form-control"></div>'
+#             # Fetch custom fields based on tipo_de_actividad_id from the POST data
+#             info_fields = InfoPorActividad.objects.filter(tipo_de_actividad_id=request.POST.get('tipo_de_actividad_id'))
+#             for field in info_fields:
+#                 Data_Por_Tarea.objects.create(
+#                     tarea=tarea,
+#                     info_por_actividad=field,
+#                     value=form.cleaned_data.get(field.data_name)
+#                 )
 
-    return JsonResponse({'html_form': html_form})
+#             return redirect('tareas_list_done')
+#     else:
+#         # Fetch the ID from the GET request
+#         tipo_actividad_id = request.GET.get('tipo_de_actividad_id')
+#         form = DynamicTaskForm(tipo_actividad_id=tipo_actividad_id)
+
+#     return render(request, 'add_tarea_done.html', {'form': form})
+
+
+# def get_custom_fields(request):
+#     tipo_actividad_id = request.GET.get('tipo_de_actividad_id')
+#     fields = InfoPorActividad.objects.filter(tipo_de_actividad_id=tipo_actividad_id)
+#     html_form = ""
+
+#     for field in fields:
+#         if field.data_type == 'string':
+#             html_form += f'<div class="form-group"><label>{field.data_name}</label><input type="text" name="{field.data_name}" class="form-control"></div>'
+#         elif field.data_type == 'integer':
+#             html_form += f'<div class="form-group"><label>{field.data_name}</label><input type="number" name="{field.data_name}" class="form-control"></div>'
+
+#     return JsonResponse({'html_form': html_form})
 
 def select_theme(request):
     if request.method == 'POST':
         form = ThemeSelectionForm(request.POST)
         if form.is_valid():
             tipo_de_actividad_id = form.cleaned_data['theme'].tipo_act_id
-            return redirect('/document_activity/?tipo_de_actividad_id={}'.format(tipo_de_actividad_id))
+            return redirect('document_activity', tipo_de_actividad_id=tipo_de_actividad_id)
     else:
         form = ThemeSelectionForm()
 
@@ -581,3 +583,29 @@ def select_theme(request):
     }
     return render(request, 'select_theme.html', context)
 
+
+
+def document_activity(request, tipo_de_actividad_id):
+    if request.method == 'POST':
+        form = DynamicTaskForm(request.POST, tipo_actividad_id=tipo_de_actividad_id)
+        if form.is_valid():
+            tarea = form.save()
+
+            # Get all custom fields related to this tipo_de_actividad
+            info_fields = InfoPorActividad.objects.filter(tipo_de_actividad_id=tipo_de_actividad_id)
+            for field in info_fields:
+                # Retrieve the value submitted in the form for this custom field
+                field_value = form.cleaned_data.get(field.data_name)
+
+                # Create and save the Data_Por_Tarea instance
+                Data_Por_Tarea.objects.create(
+                    tarea_asociada=tarea,  # Pass the Tareas instance directly
+                    info_por_actividad=field,
+                    value=str(field_value)  # Convert the value to string to store in TextField
+                )
+
+            return redirect('tareas_list_done')  # Redirect to a success URL or task list
+    else:
+        form = DynamicTaskForm(tipo_actividad_id=tipo_de_actividad_id)
+
+    return render(request, 'add_tarea_done.html', {'form': form})
