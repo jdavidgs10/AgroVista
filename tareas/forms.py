@@ -250,23 +250,31 @@ class ThemeSelectionForm(forms.Form):
         empty_label="Actividades",
         to_field_name="tipo_de_actividad"  # Assuming this is the identifier for your theme
     )
+from django import forms
+from .models import Tareas, Actividades, InfoPorActividad
+
 class DynamicTaskForm(forms.ModelForm):
     class Meta:
         model = Tareas
         exclude = ['fecha_completada', 'planned']  # Exclude fields not handled by the form directly
 
     def __init__(self, *args, **kwargs):
+        # Pop 'tipo_actividad_id' before calling super() to avoid passing unexpected kwargs.
         tipo_actividad_id = kwargs.pop('tipo_actividad_id', None)
         super(DynamicTaskForm, self).__init__(*args, **kwargs)
 
         if tipo_actividad_id:
+            # Filtering 'nombre_de_actividad' to only include those related to 'tipo_actividad_id'.
+            self.fields['nombre_de_actividad'].queryset = Actividades.objects.filter(tipo_de_actividad_id=tipo_actividad_id)
+            
+            # Handling additional dynamic fields based on 'tipo_actividad_id'.
             info_fields = InfoPorActividad.objects.filter(tipo_de_actividad_id=tipo_actividad_id)
             for field in info_fields:
                 field_class = {
                     'string': forms.CharField,
                     'integer': forms.IntegerField,
                     'date': forms.DateField
-                }.get(field.data_type, forms.CharField)  # Default to CharField class if type is unknown
+                }.get(field.data_type, forms.CharField)  # Default fallback to CharField if type is unknown
 
                 # Now instantiate the field class with the required parameters
                 self.fields[field.data_name] = field_class(required=False)

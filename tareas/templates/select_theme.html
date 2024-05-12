@@ -98,11 +98,14 @@
   </head>
   <body>
       <h2>Documentar Tareas</h2>
-      <form method="post">
-          {% csrf_token %}
-          {{ form|crispy }}
-          <input class="btn btn-success mybutton" type="submit" value='Guardar'/>
-        </form>
+      <div class="row"><!--Start of row-->
+        <div class="col-sm-5"><!--Start of col-->
+           <div class="display_table">
+    <form method="post">
+        {% csrf_token %}
+        {{form|crispy}}
+        <input class="btn btn-success mybutton" type="submit" value='Guardar'/>
+      </form>
 
       
   </body>

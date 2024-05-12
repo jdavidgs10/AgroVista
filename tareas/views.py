@@ -591,6 +591,7 @@ def document_activity(request, tipo_de_actividad_id):
         if form.is_valid():
             tarea = form.save()
 
+
             # Get all custom fields related to this tipo_de_actividad
             info_fields = InfoPorActividad.objects.filter(tipo_de_actividad_id=tipo_de_actividad_id)
             for field in info_fields:
