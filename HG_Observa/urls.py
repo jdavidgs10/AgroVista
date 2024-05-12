@@ -37,8 +37,9 @@ urlpatterns = [
     path('show-graph/', views.show_graph, name='show_graph'),
     path('create-receta/', views.create_receta, name='create-receta'),
     path('select-theme/', views.select_theme, name='select_theme'),
-    path('document_activity/', views.document_activity, name='document_activity'),
-    path('add_tarea_done/', views.done_add_tarea, name='add_tarea_done'),
+    # path('document_activity/', views.document_activity, name='document_activity'),
+    path('document_activity/<int:tipo_de_actividad_id>/', views.document_activity, name='document_activity'),
+    # path('add_tarea_done/', views.document_activity, name='add_tarea_done'),
     # path('dashboard/', views.dashboard, name='dashboard'),
     path('dashboards/', views.tareas_dashboard, name='dashboards'),
     # path("cosecha_dash/", cosecha_dash.as_view(), name="cosecha_dash"),
@@ -55,7 +56,8 @@ urlpatterns = [
     path("CosechaReportLbs/", CosechaReportLbs.as_view(), name="CosechaReportLbs"),
     path("CosechaReportUnits/", CosechaReportUnits.as_view(), name="CosechaReportUnits"),
     path("InjertosReport/", InjertosReport.as_view(), name="InjertosReport"),
-
-
+    path("info_repo/", views.info_repo, name="info_repo"),
+    path('schedule/', include('schedule.urls')),
+    # path('get-custom-fields/', views.get_custom_fields, name='get_custom_fields'),  # New path for AJAX requests
     ]
 

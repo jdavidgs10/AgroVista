@@ -17,18 +17,23 @@ class Predios(models.Model):
     tamaño_de_predio = models.IntegerField(null=True)  # Integer field for the size of the predio in hectares
 
     def __str__(self):
-        return self.nombre_de_predio
-    
+        return f"{self.nombre_de_predio}"
 
+    
 class Actividades(models.Model):
     actividades_id = models.AutoField('Actividades', primary_key=True)
-    nombre_de_actividad = models.CharField(max_length=200, null=True)  # String field for the name of the activity
-    descripcion = models.TextField(null=True)  # Text field for the description
-    tiempo_requerido = models.IntegerField(null=True)  # Integer field for the time required per hectare
+    nombre_de_actividad = models.CharField(max_length=200, null=True)
+    descripcion = models.TextField(null=True, blank=True)
+    tiempo_requerido = models.IntegerField(null=True)
     tipo_de_actividad = models.ForeignKey('Tipo_de_Actividad', on_delete=models.CASCADE, null=True)
+    tipo_producto_asociado = models.CharField(max_length=200, null=True)  # Store type, not FK
+
+    def get_associated_products(self):
+        return Productos.objects.filter(tipo_de_producto=self.tipo_producto_asociado)
 
     def __str__(self):
-        return self.nombre_de_actividad
+        return f"{self.nombre_de_actividad}"
+    
     
 class Cosechas(models.Model):
     cosecha_id = models.AutoField('Cosechas', primary_key=True)
@@ -36,7 +41,7 @@ class Cosechas(models.Model):
     descripcion = models.TextField(null=True)  # Text field for the description
 
     def __str__(self):
-        return self.nombre_de_cosecha
+        return f"{self.nombre_de_cosecha}"
     
 class Recetas(models.Model):
     receta_id = models.AutoField('Recetas', primary_key=True)
@@ -44,12 +49,13 @@ class Recetas(models.Model):
     cosecha_asociada = models.ForeignKey('Cosechas', on_delete=models.CASCADE)
     trigger_actividad_asociado = models.ForeignKey('Actividades', related_name='trigger_actividad', on_delete=models.CASCADE)
     actividades_a_crear = models.ForeignKey('Actividades', related_name='actividades_a_crear', on_delete=models.CASCADE)
-    descripcion = models.TextField(null=True)
+    descripcion = models.TextField(null=True, blank=True)
     cadence = models.IntegerField(null=True)
     dias = models.IntegerField(null=True)
 
     def __str__(self):
-        return f"Receta para {self.cosecha_asociada.nombre_de_cosecha}"
+        return f"  {self.actividades_a_crear.nombre_de_actividad} {self.trigger_actividad_asociado.nombre_de_actividad} {self.cosecha_asociada.nombre_de_cosecha}"
+
 
 class Tareas(models.Model):
     tareas_id = models.AutoField('tareas', primary_key=True)
@@ -62,26 +68,21 @@ class Tareas(models.Model):
     fecha_planificada = models.DateField(null=True)
     fecha_completada = models.DateField(null=True, blank=True)
     planned = models.BooleanField(null=True)
-    numero_de_injertos = models.IntegerField(null=True)
-    cantidad_agua_galones = models.IntegerField(null=True)
-    cantidad_agua_tiempo = models.IntegerField(null=True)
-    cantidad_siembra = models.IntegerField(null=True)
-    unidades_siembra = models.CharField(max_length=50, null=True)  # Assuming a predefined set of units
-    cantidad_cosecha_unidades = models.IntegerField(null=True)
-    cantidad_cosecha_lbs = models.IntegerField(null=True)
-    producto_utilizado = models.ForeignKey('Productos', on_delete=models.CASCADE, related_name='producto_utilizado', null=True)
-    cantidad_utilizada = models.IntegerField(null=True)
-    unidades_fertilizacion = models.CharField(max_length=100,null=True)
-    id_agroptima=models.IntegerField(null=True)
+    producto_asociado = models.ForeignKey('Productos', on_delete=models.CASCADE, null=True)
 
-    # def __str__(self):
-    #     return self.nombre_de_actividad
+    
+
+    def __str__(self):
+        return f"{self.nombre_de_actividad}"
+
+
+
 
 class Lluvias(models.Model):
     lluvias_id = models.AutoField('Lluvias', primary_key=True)
     fecha = models.DateField(null=True)  # Date field for the date of the rainfall
     lectura_de_lluvia = models.FloatField(null=True)  # Integer field for the rainfall measurement
-    descripcion = models.TextField(null=True)  # Text field for the description
+    descripcion = models.TextField(null=True, blank=True)  # Text field for the description
 
     def __str__(self):
         return f"Lluvia el {self.fecha}"
@@ -89,19 +90,61 @@ class Lluvias(models.Model):
 
 class Productos(models.Model):
     producto_id = models.AutoField('Productos', primary_key=True)
-    nombre_de_producto = models.CharField(max_length=200,null=True)  # String field for the product name
-    tipo_de_producto = models.CharField(max_length=200, null=True)  # String field for the product type
-    costo = models.DecimalField(max_digits=10, decimal_places=2, null=True)  # Currency field for the cost
-    descripcion = models.TextField(null=True)  # Text field for the description
+    nombre_de_producto = models.CharField(max_length=200, null=True)
+    tipo_de_producto = models.CharField(max_length=200, null=True, unique=True)  # Ensure uniqueness if needed
+    plaguicida_check = models.BooleanField(null=True)
+    abonamiento_check = models.BooleanField(null=True)
+    tipo_de_plaguicida = models.CharField(max_length=200, null=True)
+    tipo_de_abonamiento = models.CharField(max_length=200, null=True)
+    costo = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    descripcion = models.TextField(null=True, blank=True)
 
-    def __str__(self):
-        return self.nombre_de_producto
+    def __str__(self): 
+        return f"{self.nombre_de_producto}"
+
 
 
 class Tipo_de_Actividad(models.Model):
     tipo_act_id = models.AutoField('Theme', primary_key=True)
     tipo_de_actividad = models.CharField(max_length=200, null=True)  # String field for the product type
-    descripcion = models.TextField(null=True)  # Text field for the description
+    descripcion = models.TextField(null=True, blank=True)  # Text field for the description
  
     def __str__(self):
-        return self.tipo_de_actividad
+        return f"{self.tipo_de_actividad}"
+    
+
+class doc_repo(models.Model):
+    document_id = models.AutoField('Documento', primary_key=True)
+    nombre_documento = models.CharField(max_length=200, null=True)  # String field for the product type
+    cosecha_asociada = models.ForeignKey('Cosechas', on_delete=models.CASCADE, null=True)
+    producto_asociado = models.ForeignKey('Productos', on_delete=models.CASCADE, null=True)
+    descripcion = models.TextField(null=True, blank=True)  # Text field for the description
+    url_documento = models.URLField(max_length = 200) 
+
+    def __str__(self):
+        return f"  {self.nombre_documento} {self.cosecha_asociada.nombre_de_cosecha} {self.producto_asociado.nombre_de_producto}"
+    
+
+class Indice_Calor(models.Model):
+    indice_id = models.AutoField('Indice', primary_key=True)
+    fecha = models.DateField(null=True)  # Date field for the date of the rainfall
+    lectura_de_temperatura = models.FloatField(null=True)  # Integer field for the rainfall measurement
+    lectura_de_humedad = models.FloatField(null=True)  # Integer field for the rainfall measurement
+    indice_de_calor = models.FloatField(null=True)  # Integer field for the rainfall measurement
+    descripcion = models.TextField(null=True, blank=True)  # Text field for the description
+
+
+class InfoPorActividad(models.Model):
+    tipo_de_actividad = models.ForeignKey(Tipo_de_Actividad, on_delete=models.CASCADE)
+    data_name = models.CharField(max_length=100)
+    data_type = models.CharField(max_length=50)  # Could be 'string', 'integer', etc.
+
+    def __str__(self):
+        return f"{self.data_name} {self.tipo_de_actividad}"
+    
+
+class Data_Por_Tarea(models.Model):
+    data_id= models.AutoField('Datos_Tarea', primary_key=True)
+    tarea_asociada = models.ForeignKey(Tareas, on_delete=models.CASCADE)
+    info_por_actividad = models.ForeignKey(InfoPorActividad, on_delete=models.CASCADE)
+    value = models.TextField()  # Store all values as text; interpret based on data_type in InfoPorActividad

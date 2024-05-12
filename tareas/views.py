@@ -15,6 +15,36 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from django.db.models.functions import TruncDay
 from .forms import UserRegisterForm
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from .models import Tareas
+from django.core.serializers.json import DjangoJSONEncoder
+from django.forms.models import model_to_dict
+
+@login_required
+def home(request):
+    title = 'Welcome to the Pura Energía Estimate Generator!'
+    name = request.user
+
+    today = datetime.today()
+    start_week = today - timedelta(days=today.weekday())
+    end_week = start_week + timedelta(days=6)
+
+    # Fetch planned activities for the week
+    planned_activities = Tareas.objects.filter(
+        fecha_planificada__range=[start_week, end_week],
+        planned=True  # Assuming you have a 'planned' field to indicate planned activities
+    )
+
+    context = {
+        "title": title,
+        "name": name,
+        'planned_activities': planned_activities,
+        'start_week': start_week,
+        'end_week': end_week
+        
+    }
+
+    return render(request, 'home.html', context)
 
 
 
@@ -28,6 +58,8 @@ def add_lluvia(request):
     else:
         form = LluviasForm()
     return render(request, 'add_lluvia.html', {'form': form})
+
+
 def planned_add_tarea(request):
     if request.method == 'POST':
         form = PlannedTareasForm(request.POST)
@@ -90,34 +122,6 @@ def tareas_list_planned(request):
     tareas = Tareas.objects.filter(planned=True)
     return render(request, 'tareas_list_planned.html', {'tareas': tareas})
 
-@login_required
-def home(request):
-    title = 'Welcome to the Pura Energía Estimate Generator!'
-    name = request.user
-
-    today = datetime.today()
-    start_week = today - timedelta(days=today.weekday())
-    end_week = start_week + timedelta(days=6)
-
-    # Fetch planned activities for the week
-    planned_activities = Tareas.objects.filter(
-        fecha_planificada__range=[start_week, end_week],
-        planned=True  # Assuming you have a 'planned' field to indicate planned activities
-    )
-
-    context = {
-        "title": title,
-        "name": name,
-        'planned_activities': planned_activities,
-        'start_week': start_week,
-        'end_week': end_week
-        
-    }
-
-    return render(request, 'home.html', context)
-
-
-
 def graph_lluvias(request):
     # Find the range of dates in Lluvias data
     start_date = Lluvias.objects.order_by('fecha').first().fecha if Lluvias.objects.exists() else date.today()
@@ -156,8 +160,6 @@ def show_graph(request):
     return render(request, 'display_graph.html')
 
 
-
-
 def create_receta(request):
     if request.method == 'POST':
         form = RecetasForm(request.POST)
@@ -173,180 +175,6 @@ def create_receta(request):
         form = RecetasForm()
     return render(request, 'create_receta.html', {'form': form})
 
-
-
-# def create_tarea(request):
-#     if request.method == 'POST':
-#         theme_form = ThemeSelectionForm(request.POST)
-#         if theme_form.is_valid():
-#             selected_theme = theme_form.cleaned_data['theme']
-#             # Logic to determine which task form to show
-#             if selected_theme.tipo_de_actividad == 'Siembra':
-#                 task_form = SiembraForm(request.POST)
-#             elif selected_theme.tipo_de_actividad == 'Cosecha':
-#                 task_form = CosechaForm(request.POST)
-#             elif selected_theme.tipo_de_actividad == 'Riego':
-#                 task_form = RiegoForm(request.POST)
-#             elif selected_theme.tipo_de_actividad == 'Injertos':
-#                 task_form = InjertosForm(request.POST)
-#             if task_form.is_valid():
-#                 task_form.save()
-#                 return redirect('add_tarea_done')
-#     else:
-#         theme_form = ThemeSelectionForm()
-#         task_form = None  # Initialize with None
-
-#     return render(request, 'add_tarea_done.html', {'theme_form': theme_form, 'task_form': task_form})
-
-
-
-# def select_theme(request):
-#     if request.method == 'POST':
-#         theme_form = ThemeSelectionForm(request.POST)
-#         if theme_form.is_valid():
-#             selected_theme = theme_form.cleaned_data['theme']
-#         return redirect('document_activity', theme_id=selected_theme.tipo_act_id)
-    
-#     else:
-#         theme_form = ThemeSelectionForm()
-
-#     return render(request, 'select_theme.html', {'form': theme_form}, )
-
-
-
-def select_theme(request):
-    if request.method == 'POST':
-        form = ThemeSelectionForm(request.POST)
-        if form.is_valid():
-            tipo_de_actividad_id = form.cleaned_data['theme'].tipo_act_id
-            return redirect('/document_activity/?tipo_de_actividad_id={}'.format(tipo_de_actividad_id))
-    else:
-        form = ThemeSelectionForm()
-
-    context = {
-        'form': form,
-        'show_submit': "False",
-        'Choose_Tipo_de_Actividad': 'True'
-    }
-    return render(request, 'select_theme.html', context)
-
-
-# def document_activity(request):
-#     activity_form = None
-#     theme_id = request.GET.get('theme_id')
-
-#     try:
-#         selected_theme = Tipo_de_Actividad.objects.get(tipo_act_id=theme_id)
-#         print("Selected Theme ID:", selected_theme.tipo_act_id)  # Debug print
-#     except Tipo_de_Actividad.DoesNotExist:
-#         return redirect('select_theme')
-
-#     if selected_theme.tipo_act_id == 1:
-#         activity_form = SiembraForm(request.POST or None)
-#     elif selected_theme.tipo_act_id == 2:
-#         activity_form = CosechaForm(request.POST or None)
-#     elif selected_theme.tipo_act_id == 3:
-#         activity_form = RiegoForm(request.POST or None)
-#     elif selected_theme.tipo_act_id == 4:
-#         activity_form = InjertosForm(request.POST or None)
-
-#     # Debug print to check which form is selected
-#     print("Selected form:", type(activity_form).__name__)
-
-#     if request.method == 'POST' and activity_form and activity_form.is_valid():
-#         activity_form.save()
-#         return redirect('home.html')  # Replace with your success URL
-
-#     # If no form is matched, or if it's a GET request
-#     if activity_form is not None:
-#         return render(request, 'documenta_activity/<int:theme_id>/', {'form': activity_form})
-#     else:
-#         # Handle the case where no form matches the selected theme
-#         return HttpResponse("No form available for the selected theme.", status=404)
-
-
-def document_activity(request):
-    activity_form = None
-    theme_id = request.GET.get('tipo_de_actividad_id')  # Retrieve from GET parameters
-
-    try:
-        selected_theme = Tipo_de_Actividad.objects.get(tipo_act_id=theme_id)
-    except Tipo_de_Actividad.DoesNotExist:
-        return redirect('select_theme')
-
-    if selected_theme.tipo_act_id == 2:
-        activity_form = SiembraForm(request.POST or None)
-    elif selected_theme.tipo_act_id == 6:
-        activity_form = CosechaForm(request.POST or None)
-    elif selected_theme.tipo_act_id == 5:
-        activity_form = RiegoForm(request.POST or None)
-    elif selected_theme.tipo_act_id == 6:
-        activity_form = InjertosForm(request.POST or None)
-    elif selected_theme.tipo_act_id == 8:
-        activity_form = InjertosForm(request.POST or None)
-    else: 
-        activity_form = TareasForm(request.POST or None)
-
-    if request.method == 'POST' and activity_form and activity_form.is_valid():
-        activity_form.save()
-        return redirect('home')  # Use URL name here
-
-    if activity_form is not None:
-        context = {
-            'form': activity_form,
-            'selected_theme_name': selected_theme.tipo_de_actividad,  # Pass the theme name to the template
-        }
-        return render(request, 'add_tarea_done.html', context)
-    else:
-        return HttpResponse("No form available for the selected theme.", status=404)
-
-
-
-
-
-
-def done_add_tarea(request):
-    if request.method == 'POST':
-        form = DoneTareasForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('tareas_list_done')  # Redirect to a page listing all Tareas
-    else:
-        form = DoneTareasForm()
-    return render(request, 'add_tarea_done.html', {'form': form})
-
-
-# from django.shortcuts import render
-# from .models import Lluvias
-# from django.db.models.functions import TruncDay
-# from django.db.models import Sum
-# import json
-
-# def lluvias_chart(request):
-#     # Query Lluvias data
-#     lluvias_data = list(
-#         Lluvias.objects
-#         .annotate(day=TruncDay('fecha'))
-#         .values('day')
-#         .annotate(sum=Sum('lectura_de_lluvia'))
-#         .order_by('day')
-#     )
-
-#     for entry in lluvias_data:
-#         entry['day'] = entry['day'].strftime('%Y-%m-%d')
-#         entry['sum'] = float(entry['sum'])  # Ensure the sum is a float
-
-#     context = {
-#         'lluvias_data': json.dumps(lluvias_data),
-#     }
-
-#     return render(request, 'dashboard.html', context)
-
-
-from django.http import JsonResponse
-from .models import Tareas
-from django.core.serializers.json import DjangoJSONEncoder
-from django.forms.models import model_to_dict
 
 def tareas_calendar_feed(request):
     planned_tareas = Tareas.objects.filter(planned=True).exclude(fecha_planificada=None)
@@ -425,6 +253,10 @@ def update_tarea(request):
         form_class = RiegoForm
     elif selected_theme.tipo_act_id == 8:
         form_class = InjertosForm
+    elif selected_theme.tipo_act_id == 3:
+        form_class = PlaguicidaForm
+    elif selected_theme.tipo_act_id == 4:
+        form_class = AbonamientoForm                
     else:
         form_class = TareasForm
 
@@ -437,34 +269,6 @@ def update_tarea(request):
         form = form_class(instance=tarea_id)
 
     return render(request,'/update_tarea/?tarea_id={}'.format(tarea_id), {'form': form, 'tarea': tarea_id})
-
-
-
-# from slick_reporting.views import ReportView, Chart
-# from slick_reporting.fields import ComputationField
-# from django.db.models import Sum
-# from django.db.models import Sum
-
-# class cosecha_dash(ReportView):
-#     report_model = Tareas
-#     date_field = "fecha_completada__fecha_completada"  # Use double-underscore notation to traverse the foreign key relationship
-
-#     columns = [
-#         "fecha_completada",
-#         ComputationField.create(
-#             method=Sum, field="cantidad_cosecha_lbs", name="cantidad_cosecha_lbs_sum", verbose_name="Total lbs cosechadas"
-#         ),
-#     ]
-
-#     group_by = "fecha_completada"  # Use a string instead of a list
-#     chart_settings = [
-#         Chart(
-#             "Total lbs cosechadas",
-#             Chart.BAR,
-#             data_source=["cantidad_cosecha_lbs_sum"],
-#             title_source=["fecha_completada"],
-#         ),
-#     ]
 
 
 
@@ -507,144 +311,6 @@ def error_403(request,  exception):
 
 def error_400(request,  exception):
         return render(request,'404.html')
-
-
-# from django.db.models import Count, Sum
-# from django.db.models.functions import TruncDay, TruncMonth
-# from django.http import JsonResponse
-# from django.shortcuts import render
-# import json
-# from decimal import Decimal
-
-
-# import json
-# from datetime import date
-# from datetime import date
-# from django.db.models import Sum
-# from django.db.models.functions import TruncDay, TruncMonth
-# from django.shortcuts import render
-# import json
-
-# class DecimalEncoder(json.JSONEncoder):
-#     def default(self, o):
-#         if isinstance(o, Decimal):
-#             return float(o)
-#         return super(DecimalEncoder, self).default(o)
-
-# def dashboard(request):
-#     start_date = request.GET.get('start_date')
-#     end_date = request.GET.get('end_date')
-
-#     # Replace tareas_object with the appropriate Tareas object retrieval logic
-#     tareas_object = None  # Replace None with your Tareas object retrieval logic
-
-#     if tareas_object is not None:
-#         formatted_date = tareas_object.fecha_completada.strftime('%Y-%m-%d')
-#     else:
-#         formatted_date = 'N/A'
-
-
-#     # Extract data for the line graph for the galones based on the date range
-#     if start_date and end_date:
-#         galones_por_predio_data = list(
-#             Tareas.objects
-#             .filter(fecha_completada__range=[start_date, end_date])
-#             .annotate(day=TruncDay('fecha_completada'))
-#             .filter(planned= False)  
-#             .values('day')
-#             .annotate(sum=Sum('cantidad_agua_galones'))
-#             .order_by('day')
-#         )
-#     else:
-#         galones_por_predio_data = list(
-#             Tareas.objects
-#             .annotate(day=TruncDay('fecha_completada'))
-#             .values('day')
-#             .annotate(sum=Sum('cantidad_agua_galones'))
-#             .order_by('day')
-#         )
-
-#     for entry in galones_por_predio_data:
-#         entry['day'] = entry['day'].strftime('%Y-%m-%d')
-
-#     # Extract data for the bar chart based on the sum of injertos
-#     if start_date and end_date:
-#         numero_de_injertos_sum_data = list(
-#             Tareas.objects
-#             .filter(fecha_completada__range=[start_date, end_date])
-#             .filter(planned= False)
-#             .annotate(month=TruncMonth('fecha_completada'))
-#             .values('month')
-#             .annotate(sum=Sum('numero_de_injertos'))
-#             .order_by('month')
-#         )
-#     else:
-#         numero_de_injertos_sum_data = list(
-#             Tareas.objects
-#             .annotate(month=TruncMonth('fecha_completada'))
-#             .values('month')
-#             .annotate(sum=Sum('numero_de_injertos'))
-#             .order_by('month')
-#         )
-
-#     for entry in numero_de_injertos_sum_data:
-#         entry['month'] = entry['month'].strftime('%Y-%m')
-
-#     # Extract data for the bar chart based on the sum of cosecha
-#     if start_date and end_date:
-#         cantidad_cosecha_unidades_sum_data = list(
-#             Tareas.objects
-#             .filter(fecha_completada__range=[start_date, end_date])
-#             .filter(planned= False)
-#             .annotate(month=TruncMonth('fecha_completada'))
-#             .values('month')
-#             .annotate(sum=Sum('cantidad_cosecha_unidades'))
-#             .order_by('month')
-#         )
-#     else:
-#         cantidad_cosecha_unidades_sum_data = list(
-#             Tareas.objects
-#             .annotate(month=TruncMonth('fecha_completada'))
-#             .values('month')
-#             .annotate(sum=Sum('cantidad_cosecha_unidades'))
-#             .order_by('month')
-#         )
-
-#     for entry in cantidad_cosecha_unidades_sum_data:
-#         entry['month'] = entry['month'].strftime('%Y-%m')
-
-#     # Extract data for the doughnut chart based on the date range for cantidad_siembra 
-#     if start_date and end_date:
-#         predio_data = list(
-#             Tareas.objects
-#             .filter(created_date__range=[start_date, end_date])
-#             .filter(planned= False)
-#             .values('predio')
-#             .annotate(cantidad_siembra_sum=Sum('cantidad_siembra'))
-#             .order_by('-cantidad_siembra_sum')[:10]
-#         )
-#     else:
-#         predio_data = list(
-#             Tareas.objects
-#             .values('predio')
-#             .annotate(cantidad_siembra_sum=Sum('cantidad_siembra'))
-#             .order_by('-cantidad_siembra_sum')[:10]
-#         )
-
-#     total_tareas_done = Tareas.objects.filter(planned=False).count()
-
-#     context = {
-#         'formatted_date': formatted_date,
-#         'galones_por_predio_data': json.dumps(galones_por_predio_data, cls=DecimalEncoder),
-#         'numero_de_injertos_sum_data': json.dumps(numero_de_injertos_sum_data, cls=DecimalEncoder),
-#         'predio_data': json.dumps(predio_data, cls=DecimalEncoder),
-#         'cantidad_cosecha_unidades_sum_data': json.dumps(cantidad_cosecha_unidades_sum_data, cls=DecimalEncoder),
-#         'total_tareas_done': total_tareas_done,
-#         'predio_data': json.dumps(predio_data, cls=DecimalEncoder),
-#     }
-
-#     return render(request, 'dashboard.html', context)
-
 
 from slick_reporting.views import ReportView, Chart
 from slick_reporting.fields import ComputationField
@@ -845,3 +511,101 @@ class InjertosReport(ReportView):
         )
         
     ]
+
+
+
+def info_repo(request):
+    documentos = doc_repo.objects.all() 
+    return render(request, 'info_repo.html', {'documentos': documentos})
+
+
+
+def calendar_view(request):
+    # Fetch events from your Tareas model
+    events = Tareas.objects.all()  # You may need to adjust this query to filter events
+    
+    return render(request, 'calendar.html', {'events': events})
+
+
+
+# def document_activity(request):
+#     if request.method == 'POST':
+#         # Use the same parameter name as used in the GET request
+#         form = DynamicTaskForm(request.POST, tipo_actividad_id=request.POST.get('tipo_de_actividad_id'))
+#         if form.is_valid():
+#             tarea = form.save(commit=False)
+#             tarea.save()
+
+#             # Fetch custom fields based on tipo_de_actividad_id from the POST data
+#             info_fields = InfoPorActividad.objects.filter(tipo_de_actividad_id=request.POST.get('tipo_de_actividad_id'))
+#             for field in info_fields:
+#                 Data_Por_Tarea.objects.create(
+#                     tarea=tarea,
+#                     info_por_actividad=field,
+#                     value=form.cleaned_data.get(field.data_name)
+#                 )
+
+#             return redirect('tareas_list_done')
+#     else:
+#         # Fetch the ID from the GET request
+#         tipo_actividad_id = request.GET.get('tipo_de_actividad_id')
+#         form = DynamicTaskForm(tipo_actividad_id=tipo_actividad_id)
+
+#     return render(request, 'add_tarea_done.html', {'form': form})
+
+
+# def get_custom_fields(request):
+#     tipo_actividad_id = request.GET.get('tipo_de_actividad_id')
+#     fields = InfoPorActividad.objects.filter(tipo_de_actividad_id=tipo_actividad_id)
+#     html_form = ""
+
+#     for field in fields:
+#         if field.data_type == 'string':
+#             html_form += f'<div class="form-group"><label>{field.data_name}</label><input type="text" name="{field.data_name}" class="form-control"></div>'
+#         elif field.data_type == 'integer':
+#             html_form += f'<div class="form-group"><label>{field.data_name}</label><input type="number" name="{field.data_name}" class="form-control"></div>'
+
+#     return JsonResponse({'html_form': html_form})
+
+def select_theme(request):
+    if request.method == 'POST':
+        form = ThemeSelectionForm(request.POST)
+        if form.is_valid():
+            tipo_de_actividad_id = form.cleaned_data['theme'].tipo_act_id
+            return redirect('document_activity', tipo_de_actividad_id=tipo_de_actividad_id)
+    else:
+        form = ThemeSelectionForm()
+
+    context = {
+        'form': form,
+        'show_submit': "False",
+        'Choose_Tipo_de_Actividad': 'True'
+    }
+    return render(request, 'select_theme.html', context)
+
+
+
+def document_activity(request, tipo_de_actividad_id):
+    if request.method == 'POST':
+        form = DynamicTaskForm(request.POST, tipo_actividad_id=tipo_de_actividad_id)
+        if form.is_valid():
+            tarea = form.save()
+
+            # Get all custom fields related to this tipo_de_actividad
+            info_fields = InfoPorActividad.objects.filter(tipo_de_actividad_id=tipo_de_actividad_id)
+            for field in info_fields:
+                # Retrieve the value submitted in the form for this custom field
+                field_value = form.cleaned_data.get(field.data_name)
+
+                # Create and save the Data_Por_Tarea instance
+                Data_Por_Tarea.objects.create(
+                    tarea_asociada=tarea,  # Pass the Tareas instance directly
+                    info_por_actividad=field,
+                    value=str(field_value)  # Convert the value to string to store in TextField
+                )
+
+            return redirect('tareas_list_done')  # Redirect to a success URL or task list
+    else:
+        form = DynamicTaskForm(tipo_actividad_id=tipo_de_actividad_id)
+
+    return render(request, 'add_tarea_done.html', {'form': form})

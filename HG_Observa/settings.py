@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_dbml',
     'slick_reporting',
+    'schedule',
 ]
 
 MIDDLEWARE = [
