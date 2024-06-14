@@ -159,12 +159,8 @@
    
  
 
+  <a href="{% url 'update_tarea' tarea.tareas_id %}" class="btn btn-primary">Actualizar Tarea</a>
 
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button  a href="/update_tarea" class="btn btn-primary" type="submit" name="submit_action" value="update_tarea">Actualizar Tarea</button>
-</form>
 <br/>
 
 <!-- Modal Estado de Venta -->

@@ -250,25 +250,61 @@ class ThemeSelectionForm(forms.Form):
         empty_label="Actividades",
         to_field_name="tipo_de_actividad"  # Assuming this is the identifier for your theme
     )
+
+
+# class DynamicTaskForm(forms.ModelForm):
+#     class Meta:
+#         model = Tareas
+#         exclude = ['fecha_completada', 'planned']
+
+#     def __init__(self, *args, **kwargs):
+#         tipo_actividad_id = kwargs.pop('tipo_actividad_id', None)
+#         super(DynamicTaskForm, self).__init__(*args, **kwargs)
+
+#         if tipo_actividad_id:
+#             self.fields['nombre_de_actividad'].queryset = Actividades.objects.filter(tipo_de_actividad_id=tipo_actividad_id)
+
+#             info_fields = InfoPorActividad.objects.filter(tipo_de_actividad_id=tipo_actividad_id)
+#             for field in info_fields:
+#                 field_class = {
+#                     'string': forms.CharField,
+#                     'integer': forms.IntegerField,
+#                     'date': forms.DateField
+#                 }.get(field.data_type, forms.CharField)
+
+#                 self.fields[field.data_name] = field_class(required=False)
+#                 if field.data_type == 'date':
+#                     self.fields[field.data_name].widget = forms.widgets.DateInput(attrs={'type': 'date'})
+
+
 class DynamicTaskForm(forms.ModelForm):
     class Meta:
         model = Tareas
-        exclude = ['fecha_completada', 'planned']  # Exclude fields not handled by the form directly
+        exclude = ['fecha_completada', 'planned', 'fecha_planificada','producto_asociado']
 
     def __init__(self, *args, **kwargs):
         tipo_actividad_id = kwargs.pop('tipo_actividad_id', None)
+        instance = kwargs.get('instance', None)
         super(DynamicTaskForm, self).__init__(*args, **kwargs)
 
         if tipo_actividad_id:
+            self.fields['nombre_de_actividad'].queryset = Actividades.objects.filter(tipo_de_actividad_id=tipo_actividad_id)
+            
             info_fields = InfoPorActividad.objects.filter(tipo_de_actividad_id=tipo_actividad_id)
             for field in info_fields:
                 field_class = {
                     'string': forms.CharField,
                     'integer': forms.IntegerField,
                     'date': forms.DateField
-                }.get(field.data_type, forms.CharField)  # Default to CharField class if type is unknown
+                }.get(field.data_type, forms.CharField)
 
-                # Now instantiate the field class with the required parameters
                 self.fields[field.data_name] = field_class(required=False)
                 if field.data_type == 'date':
                     self.fields[field.data_name].widget = forms.widgets.DateInput(attrs={'type': 'date'})
+                
+                # Load existing data for custom fields if updating
+                if instance:
+                    data_value = Data_Por_Tarea.objects.filter(tarea=instance, info_por_actividad=field).first()
+                    if data_value:
+                        self.fields[field.data_name].initial = data_value.value
+
