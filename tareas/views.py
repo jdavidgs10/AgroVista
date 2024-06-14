@@ -226,50 +226,65 @@ def tareas_dashboard(request):
 
 
 def show_task(request):
-    tarea_id = request.GET.get('tarea_id')
-    tarea_detail = Tareas.objects.get(tareas_id=tarea_id)
+    tareas_id = request.GET.get('tarea_id')
+    tarea_detail = Tareas.objects.get(tareas_id=tareas_id)
 
     # form = UpdateTaskForm(instance=tarea_id)
 
 
     context = {
-        "tarea_id": tarea_id,
+        "tarea_id": tareas_id,
         "tarea": tarea_detail,
         # "form": form
     }
     return render(request, 'show_task.html', context)
 
+from django.shortcuts import render, redirect, get_object_or_404
+
+# def update_tarea(request, tarea_id):
+#     tarea = get_object_or_404(Tareas, tareas_id=tarea_id)  # Using tareas_id from your model
+    
+#     tipo_actividad_id = None  # Initialize as None to handle cases where no tipo_de_actividad is associated
+
+#     if tarea.nombre_de_actividad and tarea.nombre_de_actividad.tipo_de_actividad:
+#         tipo_actividad_id = tarea.nombre_de_actividad.tipo_de_actividad.tipo_act_id  # Correctly accessing the primary key
+    
+    
+#     if request.method == 'POST':
+#         form = DynamicTaskForm(request.POST, instance=tarea, tipo_actividad_id=tipo_actividad_id)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('tareas_list_done')  # Redirect to a confirmation or list page
+#     else:
+#         form = DynamicTaskForm(instance=tarea, tipo_actividad_id=tipo_actividad_id)
+
+#     return render(request, 'update_tarea.html', {'form': form, 'tarea': tarea})
 
 
-def update_tarea(request):
-    tarea_id = request.GET.get('tarea_id')
-    selected_theme = tarea_id.nombre_de_actividad.tipo_de_actividad
-
-    if selected_theme.tipo_act_id == 2:
-        form_class = SiembraForm
-    elif selected_theme.tipo_act_id == 6:
-        form_class = CosechaForm
-    elif selected_theme.tipo_act_id == 5:
-        form_class = RiegoForm
-    elif selected_theme.tipo_act_id == 8:
-        form_class = InjertosForm
-    elif selected_theme.tipo_act_id == 3:
-        form_class = PlaguicidaForm
-    elif selected_theme.tipo_act_id == 4:
-        form_class = AbonamientoForm                
-    else:
-        form_class = TareasForm
+def update_tarea(request, tarea_id):
+    tarea = get_object_or_404(Tareas, tareas_id=tarea_id)
+    tipo_actividad_id = tarea.nombre_de_actividad.tipo_de_actividad.tipo_act_id if tarea.nombre_de_actividad else None
 
     if request.method == 'POST':
-        form = form_class(request.POST, instance=tarea_id)
+        form = DynamicTaskForm(request.POST, instance=tarea, tipo_actividad_id=tipo_actividad_id)
         if form.is_valid():
-            form.save()
-            return redirect('show_task', tarea_id=tarea_id)
+            saved_tarea = form.save()
+
+            # Update or create custom field data
+            info_fields = InfoPorActividad.objects.filter(tipo_de_actividad_id=tipo_actividad_id)
+            for field in info_fields:
+                field_value = form.cleaned_data.get(field.data_name)
+                Data_Por_Tarea.objects.update_or_create(
+                    tarea=saved_tarea,
+                    info_por_actividad=field,
+                    defaults={'value': field_value}
+                )
+
+            return redirect('tareas_list_done')
     else:
-        form = form_class(instance=tarea_id)
+        form = DynamicTaskForm(instance=tarea, tipo_actividad_id=tipo_actividad_id)
 
-    return render(request,'/update_tarea/?tarea_id={}'.format(tarea_id), {'form': form, 'tarea': tarea_id})
-
+    return render(request, 'update_tarea.html', {'form': form, 'tarea': tarea})
 
 
 def register(request):
