@@ -1,10 +1,12 @@
-tipo_de_actividad,descripcion
-Preparación Del Terreno,Preparar terreno
-Siembra,Sembrar
-Manejo de Malezas,Bregar con Malezas
-Abonamiento,Abonar/Fertilizar
-Riego,Irrigacion/Riego
-Cosecha,Cosechar
-Mantenimiento,Mantenimiento General
-Vivero,Todo lo que tenga que ver con vivero
-Other,Todo lo demas
+tipo_act_id,tipo_de_actividad,descripcion
+1,Preparacion de Terreno,Tareas asociadas a la preparación del terreno
+2,Siembra,Tareas asociadas a la Siembra
+3,Plaguicidas,Tareas asociadas a los Plaguicidas
+4,Abonamiento,Tareas asociadas al Abonamiento
+5,Riego-Ejecucion,Tareas asociadas al Riego-Ejecución
+6,Riego-Planificacion,Tareas asociadas al Riego-Planificación
+7,Cosecha,Tareas asociadas a la Cosecha
+8,Mantenimiento,Tareas asociadas al Mantenimiento
+9,Preparacion de Semilla,Tareas asociadas a la Preparación de Semilla
+10,Vivero,Tareas asociadas al Vivero
+11,Otro,Todo lo demas
